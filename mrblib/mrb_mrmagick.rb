@@ -6,29 +6,40 @@ module Mrmagick
 	class Image
 		def initialize(path)
 			@origImagePath = path
-      p @origImagePath
-      return self
+			p @origImagePath
+			return self
 		end
 
-    def magickCommand(cmd)
-      @cmd = cmd
-    end
-
-		def blur_image(param)
-			destImage = Image.new
-			destImage.magickCommand("convert #{self.gen} -blur #{param} ")
-			return destImage
+		def magickCommand(cmd)
+			if @cmd.nil? then
+				@cmd=[cmd]
+			else
+				@cmd.push(cmd)
+			end
 		end
 
 		def write(path)
-			# これまでのコマンドを実行する。
-      put @cmd
+			if @cmd.nil? then
+				# からのファイルを作る？
+				puts @origImagePath
+			else
+				# これまでのコマンドを実行する。
+				lastIdx = @cmd.size-1
+				idx=0
+				for c in @cmd do
+					if idx == lastIdx then
+						c.gsub!(@origImagePath, path)
+					end
+					puts c
+					#rtn = `c`
+				end
+			end
 		end
 		def gen
 			# 自分を出力する。
 			if @origImagePath.length > 0 then
 				return @origImagePath
-      else
+			else
 
 			end
 		end
@@ -38,27 +49,58 @@ module Mrmagick
 
 	end
 	class ImageList
-    def initialize
-      @cmd=""
-    end
+		def initialize
+
+		end
 		def initialize(imagePath)
-      puts "ImageList.new start"
+			puts "ImageList.new start"
+			if imagePath.length == 0 then
+				path = `uuidgen`.chomp!
+				imagePath = path+".png"
+			end
 			@image = Mrmagick::Image.new(imagePath)
-      @cmd=""
+			@cmd=""
+		end
+				def getPath
+			return @image.gen
+		end
+		def write(path)
+			@image.write(path)
 		end
 
-    def setCommand(cmd)
-      @cmd=cmd
-    end
+		def magickCommand(cmd)
+			puts "magickCommand"
+			puts cmd
+			@image.magickCommand(cmd)
+		end
 
-    def blur_image(param)
+		def blur_image(*args)
+			param = args.join(',')
 			destImage = ImageList.new ""
-      srcImagePath=@image.gen
-			destImage.setCommand("convert #{srcImagePath} -blur #{param} ")
+			destImagePath = destImage.getPath
+			srcImagePath=@image.gen
+			destImage.magickCommand("convert #{srcImagePath} -blur #{param} #{destImagePath}")
 			return destImage
 		end
 
-    def self.bye
+		def scale(*args)
+			if args.length >1 then
+				param = args.join('x')
+			else
+				scale = args[0]
+				if scale<1 then
+					scale = scale * 100
+				end
+				param = scale + "%"
+			end
+			destImage = ImageList.new ""
+			destImagePath = destImage.getPath
+			srcImagePath=@image.gen
+			destImage.magickCommand("convert #{srcImagePath} -resize #{param} #{destImagePath}")
+			return destImage
+		end
+
+		def self.bye
 			#self.hello + " bye"
 			"bye"
 		end
