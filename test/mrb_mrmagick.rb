@@ -2,16 +2,15 @@
 ## Mrmagick Test
 ##
 
-assert("Mrmagick#hello") do
-  t = Mrmagick.new "hello"
+assert("Mrmagick::Capi#hello") do
+  t = Mrmagick::Capi.new "hello"
   assert_equal("hello", t.hello)
 end
 
-assert("Mrmagick#bye") do
-  t = Mrmagick.new "hello"
-  assert_equal("hello bye", t.bye)
+assert("Mrmagick::ImageList#bye") do
+  assert_equal("bye", Mrmagick::ImageList.bye)
 end
 
-assert("Mrmagick.hi") do
-  assert_equal("hi!!", Mrmagick.hi)
+assert("Mrmagick::Capi.hi") do
+  assert_equal("hi!!", Mrmagick::Capi.hi)
 end

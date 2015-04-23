@@ -57,8 +57,12 @@ static mrb_value mrb_mrmagick_hi(mrb_state *mrb, mrb_value self)
 
 void mrb_mruby_mrmagick_gem_init(mrb_state *mrb)
 {
+    struct RClass *mrmagick_module;
     struct RClass *mrmagick;
-    mrmagick = mrb_define_class(mrb, "Mrmagick", mrb->object_class);
+
+    mrmagick_module = mrb_define_module(mrb, "Mrmagick");
+    mrmagick = mrb_define_class_under(mrb, mrmagick_module, "Capi", mrb->object_class);
+
     mrb_define_method(mrb, mrmagick, "initialize", mrb_mrmagick_init, MRB_ARGS_REQ(1));
     mrb_define_method(mrb, mrmagick, "hello", mrb_mrmagick_hello, MRB_ARGS_NONE());
     mrb_define_class_method(mrb, mrmagick, "hi", mrb_mrmagick_hi, MRB_ARGS_NONE());
@@ -68,4 +72,3 @@ void mrb_mruby_mrmagick_gem_init(mrb_state *mrb)
 void mrb_mruby_mrmagick_gem_final(mrb_state *mrb)
 {
 }
-
