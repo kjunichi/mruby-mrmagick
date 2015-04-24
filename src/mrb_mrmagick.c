@@ -64,7 +64,6 @@ static mrb_value mrb_mrmagick_scale(mrb_state *mrb, mrb_value self)
 static mrb_value mrb_mrmagick_hi(mrb_state *mrb, mrb_value self)
 {
 	myputs();
-scale("./hoge.png", "./testScaled.jpg","200%");
   return mrb_str_new_cstr(mrb, "hi!!");
 }
 
