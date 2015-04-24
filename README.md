@@ -13,15 +13,16 @@ end
 ```
 ## example
 ```ruby
-p Mrmagick.hi
-#=> "hi!!"
-t = Mrmagick.new "hello"
-p t.hello
-#=> "hello"
-p t.bye
-#=> "hello bye"
+img = Mragick::ImageList.new("sample.png") # read image file.
+new_img = img.blur_image(20.0, 10.0) # returns new image which bluerd.
+new_img.write("blur.jpg")
 ```
 
+```ruby
+img = Mragick::ImageList.new("sample.jpg") # read image file.
+new_img = img.scale(0.5) # returns new image which scaled.
+new_img.write("half.png")
+```
 ## License
 under the MIT License:
 - see LICENSE file
