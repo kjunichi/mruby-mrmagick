@@ -31,7 +31,13 @@ module Mrmagick
 						c.gsub!(@origImagePath, path)
 					end
 					puts c
-					rtn = `#{c}`
+					if c.include?("-resize") then
+						params = c.split(" ")
+						#p params
+						Mrmagick::Capi.scale(params[1], params[4], params[3])
+					else
+						rtn = `#{c}`
+					end
 				end
 			end
 		end
@@ -88,10 +94,13 @@ module Mrmagick
 				param = args.join('x')
 			else
 				scale = args[0]
-				if scale<1 then
+				if !scale.to_s.include?("%") then
 					scale = scale * 100
+					param = scale.to_s + "%"
+				else
+					param = scale
 				end
-				param = scale.to_s + "%"
+
 			end
 			destImage = ImageList.new ""
 			destImagePath = destImage.getPath

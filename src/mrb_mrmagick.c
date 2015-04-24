@@ -10,6 +10,9 @@
 #include "mruby/data.h"
 #include "mrb_mrmagick.h"
 
+extern void myputs();
+extern void scale(const char *src_path, const char *dst_path, const char*ratio);
+
 #define DONE mrb_gc_arena_restore(mrb, 0);
 
 typedef struct {
@@ -50,8 +53,18 @@ static mrb_value mrb_mrmagick_hello(mrb_state *mrb, mrb_value self)
   return mrb_str_new(mrb, data->str, data->len);
 }
 
+static mrb_value mrb_mrmagick_scale(mrb_state *mrb, mrb_value self)
+{
+  char *src_path, *dst_path, *ratio;
+  mrb_get_args(mrb, "zzz", &src_path, &dst_path, &ratio);
+  scale(src_path, dst_path, ratio);
+  return mrb_str_new_cstr(mrb, "hi!!");
+}
+
 static mrb_value mrb_mrmagick_hi(mrb_state *mrb, mrb_value self)
 {
+	myputs();
+scale("./hoge.png", "./testScaled.jpg","200%");
   return mrb_str_new_cstr(mrb, "hi!!");
 }
 
@@ -66,6 +79,7 @@ void mrb_mruby_mrmagick_gem_init(mrb_state *mrb)
     mrb_define_method(mrb, mrmagick, "initialize", mrb_mrmagick_init, MRB_ARGS_REQ(1));
     mrb_define_method(mrb, mrmagick, "hello", mrb_mrmagick_hello, MRB_ARGS_NONE());
     mrb_define_class_method(mrb, mrmagick, "hi", mrb_mrmagick_hi, MRB_ARGS_NONE());
+    mrb_define_class_method(mrb, mrmagick, "scale", mrb_mrmagick_scale, MRB_ARGS_REQ(3));
     DONE;
 }
 
