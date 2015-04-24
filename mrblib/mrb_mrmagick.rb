@@ -31,7 +31,7 @@ module Mrmagick
 						c.gsub!(@origImagePath, path)
 					end
 					puts c
-					#rtn = `c`
+					rtn = `#{c}`
 				end
 			end
 		end
@@ -91,7 +91,7 @@ module Mrmagick
 				if scale<1 then
 					scale = scale * 100
 				end
-				param = scale + "%"
+				param = scale.to_s + "%"
 			end
 			destImage = ImageList.new ""
 			destImagePath = destImage.getPath
