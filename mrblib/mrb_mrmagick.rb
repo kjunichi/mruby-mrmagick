@@ -7,7 +7,12 @@ module Mrmagick
 		def initialize(path)
 			@origImagePath = path
 			p @origImagePath
-			return self
+			#return self
+		end
+
+		def setParentImage(images)
+			@images.push(images)
+			@images.flatten!
 		end
 
 		def magickCommand(cmd)
@@ -21,13 +26,16 @@ module Mrmagick
 		def write(path)
 			if @cmd.nil? then
 				# からのファイルを作る？
-				puts @origImagePath
+				#puts @origImagePath
 			else
 				# これまでのコマンドを実行する。
 				lastIdx = @cmd.size-1
 				idx=0
 				for c in @cmd do
+
 					if idx == lastIdx then
+						p idx
+						p @origImagePath,path
 						c.gsub!(@origImagePath, path)
 					end
 					puts c
@@ -50,6 +58,7 @@ module Mrmagick
 					else
 							rtn = `#{c}`
 					end
+					idx = idx + 1
 				end
 			end
 		end
@@ -71,15 +80,28 @@ module Mrmagick
 
 		end
 		def initialize(imagePath)
-			puts "ImageList.new start"
+
 			if imagePath.length == 0 then
+				# 物理パスが指定されていない場合、仮想的にファイル名を生成し、保持する。
 				path = `uuidgen`.chomp!
 				imagePath = path+".png"
+				@fRealFile = false
+			else
+				@fRealFile = true
 			end
+			@images=[]
+
 			@image = Mrmagick::Image.new(imagePath)
 			@cmd=""
 		end
-				def getPath
+
+		def setParentImages(images)
+			@images.push(images)
+			@images.flatten!
+
+		end
+
+		def getPath
 			return @image.gen
 		end
 		def write(path)
@@ -87,17 +109,26 @@ module Mrmagick
 		end
 
 		def magickCommand(cmd)
-			puts "magickCommand"
+			#puts "magickCommand"
 			puts cmd
+			@images.each {|savedCmd|
+				@image.magickCommand(savedCmd)
+			}
 			@image.magickCommand(cmd)
+			@images.push(cmd)
+		end
+
+		def createVirtualImageList()
+			destImage = ImageList.new ""
+			destImage.setParentImages(@images)
+			return destImage
 		end
 
 		def blur_image(*args)
 			param = args.join(',')
-			destImage = ImageList.new ""
-			destImagePath = destImage.getPath
+			destImage = createVirtualImageList()
 			srcImagePath=@image.gen
-			destImage.magickCommand("convert #{srcImagePath} -blur #{param} #{destImagePath}")
+			destImage.magickCommand("convert #{srcImagePath} -blur #{param} #{destImage.getPath}")
 			return destImage
 		end
 
@@ -114,10 +145,9 @@ module Mrmagick
 				end
 
 			end
-			destImage = ImageList.new ""
-			destImagePath = destImage.getPath
+			destImage = createVirtualImageList()
 			srcImagePath=@image.gen
-			destImage.magickCommand("convert #{srcImagePath} -resize #{param} #{destImagePath}")
+			destImage.magickCommand("convert #{srcImagePath} -resize #{param} #{destImage.getPath}")
 			return destImage
 		end
 
