@@ -14,7 +14,7 @@ end
 ## example
 ```ruby
 img = Mragick::ImageList.new("sample.png") # read image file.
-new_img = img.blur_image(20.0, 10.0) # returns new image which bluerd.
+new_img = img.blur_image(0.0, 8.0) # returns new image which bluerd.
 new_img.write("blur.jpg")
 ```
 

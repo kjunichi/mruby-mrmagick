@@ -35,8 +35,20 @@ module Mrmagick
 						params = c.split(" ")
 						#p params
 						Mrmagick::Capi.scale(params[1], params[4], params[3])
+					elsif c.include?("-blur") then
+						params = c.split(" ")
+						radius_sigma=params[3].split(",")
+
+						p radius_sigma
+						if radius_sigma.length<2 then
+							sigma = 0.5
+						else
+							sigma = radius_sigma[1].to_f;
+						end
+						#p radius_sigma[0],sigma
+						Mrmagick::Capi.blur(params[1], params[4], radius_sigma[0].to_f, sigma)
 					else
-						rtn = `#{c}`
+							rtn = `#{c}`
 					end
 				end
 			end

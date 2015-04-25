@@ -12,6 +12,8 @@
 
 extern void myputs();
 extern void scale(const char *src_path, const char *dst_path, const char*ratio);
+extern void blur(const char *src_path, const char *dst_path,
+   const double radius, const double sigma);
 
 #define DONE mrb_gc_arena_restore(mrb, 0);
 
@@ -61,6 +63,15 @@ static mrb_value mrb_mrmagick_scale(mrb_state *mrb, mrb_value self)
   return mrb_str_new_cstr(mrb, "hi!!");
 }
 
+static mrb_value mrb_mrmagick_blur(mrb_state *mrb, mrb_value self)
+{
+  char *src_path, *dst_path;
+  mrb_float radius, sigma;
+  mrb_get_args(mrb, "zzff", &src_path, &dst_path, &radius, &sigma);
+  blur(src_path, dst_path, (double)radius, (double)sigma);
+  return mrb_str_new_cstr(mrb, "hi!!");
+}
+
 static mrb_value mrb_mrmagick_hi(mrb_state *mrb, mrb_value self)
 {
 	myputs();
@@ -79,6 +90,7 @@ void mrb_mruby_mrmagick_gem_init(mrb_state *mrb)
     mrb_define_method(mrb, mrmagick, "hello", mrb_mrmagick_hello, MRB_ARGS_NONE());
     mrb_define_class_method(mrb, mrmagick, "hi", mrb_mrmagick_hi, MRB_ARGS_NONE());
     mrb_define_class_method(mrb, mrmagick, "scale", mrb_mrmagick_scale, MRB_ARGS_REQ(3));
+    mrb_define_class_method(mrb, mrmagick, "blur", mrb_mrmagick_blur, MRB_ARGS_REQ(4));
     DONE;
 }
 
