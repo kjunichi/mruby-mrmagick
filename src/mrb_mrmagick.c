@@ -7,7 +7,7 @@
 */
 #include <string.h>
 #include <stdio.h>
-#include <ossp/uuid.h>
+#include <uuid.h>
 
 #include "mruby.h"
 #include "mruby/data.h"

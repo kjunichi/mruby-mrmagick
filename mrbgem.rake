@@ -6,11 +6,11 @@ MRuby::Gem::Specification.new('mruby-mrmagick') do |spec|
   magick_cflg.gsub!(/\n/," ")
   #puts magick_cflg
   spec.cxx.flags << magick_cflg
-  ossp_uuid_cflg = `pkg-config uuid --cflags`.chomp!
+  ossp_uuid_cflg = `uuid-config --cflags`.chomp!
   spec.cc.flags << ossp_uuid_cflg
   magick_libs = `Magick++-config --ldflags --libs`.chomp!
   magick_libs.gsub!(/\n/," ")
   spec.linker.flags_before_libraries << magick_libs
-  ossp_uuid_libs = `pkg-config uuid --libs`.chomp!
+  ossp_uuid_libs = `uuid-config --ldflags --libs`.chomp!
   spec.linker.flags_before_libraries << ossp_uuid_libs
 end
