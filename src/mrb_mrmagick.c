@@ -7,6 +7,7 @@
 */
 #include <string.h>
 #include <stdio.h>
+#include <ossp/uuid.h>
 
 #include "mruby.h"
 #include "mruby/data.h"
@@ -76,6 +77,21 @@ static mrb_value mrb_mrmagick_blur(mrb_state *mrb, mrb_value self)
   return mrb_str_new_cstr(mrb, "hi!!");
 }
 
+static mrb_value mrb_mrmagick_uuid(mrb_state *mrb, mrb_value self)
+{
+  char *uuid_str;
+  uuid_t *uuid;
+
+  uuid_create(&uuid);
+  uuid_make(uuid, UUID_MAKE_V4);
+  uuid_str = NULL;
+  uuid_export(uuid, UUID_FMT_STR, (void **)&uuid_str, NULL);
+  uuid_destroy(uuid);
+
+  return mrb_str_new_cstr(mrb, uuid_str);
+}
+
+
 static mrb_value mrb_mrmagick_rm(mrb_state *mrb, mrb_value self)
 {
   mrb_value ary,val;
@@ -118,6 +134,7 @@ void mrb_mruby_mrmagick_gem_init(mrb_state *mrb)
     mrb_define_class_method(mrb, mrmagick, "scale", mrb_mrmagick_scale, MRB_ARGS_REQ(3));
     mrb_define_class_method(mrb, mrmagick, "blur", mrb_mrmagick_blur, MRB_ARGS_REQ(4));
     mrb_define_class_method(mrb, mrmagick, "rm", mrb_mrmagick_rm, MRB_ARGS_REQ(1));
+    mrb_define_class_method(mrb, mrmagick, "uuid", mrb_mrmagick_uuid, MRB_ARGS_NONE());
     DONE;
 }
 

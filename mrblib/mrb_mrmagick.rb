@@ -62,7 +62,7 @@ module Mrmagick
 					end
 					idx = idx + 1
 				end
-					if delTmpFiles.size>0 then 
+					if delTmpFiles.size>0 then
 						Mrmagick::Capi.rm(delTmpFiles)
 					end
 			end
@@ -88,7 +88,8 @@ module Mrmagick
 
 			if imagePath.length == 0 then
 				# 物理パスが指定されていない場合、仮想的にファイル名を生成し、保持する。
-				path = `uuidgen`.chomp!
+				#path = `uuidgen`.chomp!
+				path = Mrmagick::Capi.uuid()
 				imagePath = path+".png"
 				@fRealFile = false
 			else
