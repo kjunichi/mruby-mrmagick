@@ -31,6 +31,8 @@ module Mrmagick
 				# これまでのコマンドを実行する。
 				lastIdx = @cmd.size-1
 				idx=0
+				# 削除ファイルリスト
+				delTmpFiles=[]
 				for c in @cmd do
 
 					if idx == lastIdx then
@@ -39,15 +41,15 @@ module Mrmagick
 						c.gsub!(@origImagePath, path)
 					end
 					puts c
+					params = c.split(" ")
+					if idx<lastIdx and lastIdx>0 then
+						# 複数処理する場合、中間ファイルは削除対象にする。
+						delTmpFiles.push(params[4])
+					end
 					if c.include?("-resize") then
-						params = c.split(" ")
-						#p params
 						Mrmagick::Capi.scale(params[1], params[4], params[3])
 					elsif c.include?("-blur") then
-						params = c.split(" ")
 						radius_sigma=params[3].split(",")
-
-						p radius_sigma
 						if radius_sigma.length<2 then
 							sigma = 0.5
 						else
@@ -60,6 +62,9 @@ module Mrmagick
 					end
 					idx = idx + 1
 				end
+					if delTmpFiles.size>0 then 
+						Mrmagick::Capi.rm(delTmpFiles)
+					end
 			end
 		end
 		def gen
