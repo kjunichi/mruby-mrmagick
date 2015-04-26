@@ -28,7 +28,7 @@ new_img.write("half.png")
 img = Mragick::ImageList.new("sample.png") # read image file.
 img2 = img.blur_image(0.0, 8.0) # returns new image which bluerd.
 img3 = img2.scale(4) # returns new image which scaled.
-img3.write("blur.jpg")
+img3.write("blur_x4.jpg")
 ```
 ## License
 under the MIT License:
