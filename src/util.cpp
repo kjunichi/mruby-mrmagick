@@ -20,6 +20,12 @@ void myInitializeMagick() {
 	}
 }
 
+static void getSrcImageFilePath(mrb_state *mrb, mrb_value obj, char *buf) {
+	mrb_value val = mrb_iv_get(mrb, obj, mrb_intern_lit(mrb, "@parentPath"));
+	strncpy(buf, RSTRING_PTR( val ), RSTRING_LEN( val ));
+	buf[RSTRING_LEN( val )]='\0';
+}
+
 extern "C" void myputs() {
 	cout <<"Hello, mruby!"<<endl;
 }
@@ -43,6 +49,44 @@ extern "C" void blur(const char *srcPath,const char *destPath,
 	image.blur(radius, sigma);
 	image.write(destPath);
 }
+extern "C" mrb_value mrb_mrmagick_get_exif_by_entry(mrb_state *mrb, mrb_value self)
+{
+	char srcImageFilePath[512],buf[1024*20];
+
+	mrb_value obj,val;
+  mrb_get_args(mrb, "o", &obj);
+  mrb_funcall(mrb,mrb_top_self(mrb), "p", 1, obj);
+	val = mrb_iv_get(mrb, obj, mrb_intern_lit(mrb, "@exifKey"));
+	strncpy(buf,RSTRING_PTR(val),RSTRING_LEN(val));
+	buf[RSTRING_LEN(val)]='\0';
+	//cout<<buf<<endl;
+	string exiftag = "EXIF:";
+	exiftag.append(buf);
+	getSrcImageFilePath(mrb,obj, srcImageFilePath);
+	Image img;
+	//cout << "srcImageFilePath = [" << srcImageFilePath << "]"<<endl;
+	img.read(srcImageFilePath);
+	string exifStr = img.attribute(exiftag);
+	//cout << "exif = [" << exifStr << "]"<<endl;
+
+	//exifStr = img.attribute("EXIF:FNumber");
+	//cout << "exif = [" << exifStr << "]"<<endl;
+
+	/*
+	Blob blob = img.profile("exif");
+	int len = blob.length();
+	strncpy(buf, (const char *)blob.data(), len);
+	buf[len]='\0';
+	cout << "exif = [";
+	for(int i = 0; i < len; ++i) {
+		cout << ((const char *)(blob.data()))[i];
+	}
+	cout <<"] "<<len<<endl;
+	*/
+	const char *cstr = exifStr.c_str();
+
+	return mrb_str_new_cstr(mrb, cstr);
+}
 
 extern "C" mrb_value mrb_mrmagick_write(mrb_state *mrb, mrb_value self)
 {
@@ -51,9 +95,7 @@ extern "C" mrb_value mrb_mrmagick_write(mrb_state *mrb, mrb_value self)
   mrb_value obj,val;
   mrb_get_args(mrb, "o", &obj);
   mrb_funcall(mrb,mrb_top_self(mrb), "p", 1, obj);
-	val = mrb_iv_get(mrb, obj, mrb_intern_lit(mrb, "@parentPath"));
-	strncpy(srcImageFilePath, RSTRING_PTR( val ), RSTRING_LEN( val ));
-	srcImageFilePath[RSTRING_LEN( val )]='\0';
+	getSrcImageFilePath(mrb, obj, srcImageFilePath);
 
 	cout << "srcImageFilePath=["<<srcImageFilePath<<"]"<<endl;
 
@@ -113,7 +155,7 @@ extern "C" mrb_value mrb_mrmagick_write(mrb_state *mrb, mrb_value self)
 				}
 				v = mrb_funcall(mrb, mrb_ary_ref(mrb, radius_sigma, 0),"to_f", 0);
 				float radius = mrb_float(v);
-				cout<<"radius[0],radius[1] = "<<radius<<", "<<sigma<<endl;
+				//cout<<"radius[0],radius[1] = "<<radius<<", "<<sigma<<endl;
 				// Mrmagick::Capi.blur(params[1], params[4], radius_sigma[0].to_f, sigma)
 				img.blur(radius, sigma);
 			}

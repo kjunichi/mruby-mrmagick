@@ -10,6 +10,15 @@ module Mrmagick
 			#return self
 		end
 
+		def setParentPath(path)
+			@parentPath = path
+		end
+
+		def get_exif_by_entry(key)
+			@exifKey=key
+			Mrmagick::Capi.get_exif_by_entry(self)
+		end
+
 		def setParentImage(images)
 			@images.push(images)
 			@images.flatten!
@@ -93,6 +102,7 @@ module Mrmagick
 		def initialize
 
 		end
+
 		def initialize(imagePath)
 
 			if imagePath.length == 0 then
@@ -108,7 +118,12 @@ module Mrmagick
 			@images=[]
 
 			@image = Mrmagick::Image.new(imagePath)
+			@image.setParentPath(imagePath)
 			@cmd=""
+		end
+
+		def get_exif_by_entry(key)
+			@image.get_exif_by_entry(key)
 		end
 
 		def setParentImages(images)
