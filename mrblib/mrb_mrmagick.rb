@@ -17,6 +17,9 @@ module Mrmagick
 
 		def magickCommand(cmd)
 			if @cmd.nil? then
+				# １番目のコマンドのソースパスを親のパス(実態のある画像ファイル)と仮定。
+				params = cmd.split(" ")
+				@parentPath = params[1];
 				@cmd=[cmd]
 			else
 				@cmd.push(cmd)
@@ -24,6 +27,11 @@ module Mrmagick
 		end
 
 		def write(path)
+			@outpath=path
+			Mrmagick::Capi.write(self)
+		end
+
+		def write_old(path)
 			if @cmd.nil? then
 				# からのファイルを作る？
 				#puts @origImagePath
@@ -67,8 +75,9 @@ module Mrmagick
 					end
 			end
 		end
+
 		def gen
-			# 自分を出力する。
+			# 自分のファイルパスを出力する。
 			if @origImagePath.length > 0 then
 				return @origImagePath
 			else
@@ -89,7 +98,8 @@ module Mrmagick
 			if imagePath.length == 0 then
 				# 物理パスが指定されていない場合、仮想的にファイル名を生成し、保持する。
 				#path = `uuidgen`.chomp!
-				path = Mrmagick::Capi.uuid()
+				#path = Mrmagick::Capi.uuid()
+				path="nofilepath"
 				imagePath = path+".png"
 				@fRealFile = false
 			else
@@ -104,7 +114,6 @@ module Mrmagick
 		def setParentImages(images)
 			@images.push(images)
 			@images.flatten!
-
 		end
 
 		def getPath
