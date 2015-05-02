@@ -1,5 +1,6 @@
 #include <Magick++.h>
 #include <iostream>
+#include <string.h>
 
 #include "mruby.h"
 #include "mruby/data.h"
