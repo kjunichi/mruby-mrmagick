@@ -35,6 +35,10 @@ module Mrmagick
 			end
 		end
 
+		def to_blob()
+			Mrmagick::Capi.to_blob(self)
+		end
+
 		def write(path)
 			@outpath=path
 			Mrmagick::Capi.write(self)
@@ -134,8 +138,13 @@ module Mrmagick
 		def getPath
 			return @image.gen
 		end
+
 		def write(path)
 			@image.write(path)
+		end
+
+		def to_blob()
+			@image.to_blob()
 		end
 
 		def magickCommand(cmd)

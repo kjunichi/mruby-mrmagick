@@ -21,6 +21,7 @@ extern void blur(const char *src_path, const char *dst_path,
                  const double radius, const double sigma);
 extern mrb_value mrb_mrmagick_write(mrb_state *mrb, mrb_value self);
 extern mrb_value mrb_mrmagick_get_exif_by_entry(mrb_state *mrb, mrb_value self);
+extern mrb_value mrb_mrmagick_to_blob(mrb_state *mrb, mrb_value self);
 
 #define DONE mrb_gc_arena_restore(mrb, 0);
 
@@ -140,6 +141,7 @@ void mrb_mruby_mrmagick_gem_init(mrb_state *mrb)
   mrb_define_class_method(mrb, mrmagick, "blur", mrb_mrmagick_blur, MRB_ARGS_REQ(4));
   mrb_define_class_method(mrb, mrmagick, "rm", mrb_mrmagick_rm, MRB_ARGS_REQ(1));
   mrb_define_class_method(mrb, mrmagick, "write", mrb_mrmagick_write, MRB_ARGS_REQ(1));
+  mrb_define_class_method(mrb, mrmagick, "to_blob", mrb_mrmagick_to_blob, MRB_ARGS_REQ(1));
   mrb_define_class_method(mrb, mrmagick, "get_exif_by_entry", mrb_mrmagick_get_exif_by_entry, MRB_ARGS_REQ(1));
   //mrb_define_class_method(mrb, mrmagick, "uuid", mrb_mrmagick_uuid, MRB_ARGS_NONE());
   DONE;

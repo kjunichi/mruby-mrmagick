@@ -88,30 +88,19 @@ extern "C" mrb_value mrb_mrmagick_get_exif_by_entry(mrb_state *mrb, mrb_value se
 	return mrb_str_new_cstr(mrb, cstr);
 }
 
-extern "C" mrb_value mrb_mrmagick_write(mrb_state *mrb, mrb_value self)
-{
-	char srcImageFilePath[512],distImageFilePath[512],buf[256];
+static void writeAndBlob(Image *img, mrb_state *mrb, mrb_value obj) {
+	char srcImageFilePath[512], buf[256];
 
-  mrb_value obj,val;
-  mrb_get_args(mrb, "o", &obj);
-  mrb_funcall(mrb,mrb_top_self(mrb), "p", 1, obj);
 	getSrcImageFilePath(mrb, obj, srcImageFilePath);
 
-	cout << "srcImageFilePath=["<<srcImageFilePath<<"]"<<endl;
+	//cout << "srcImageFilePath=["<<srcImageFilePath<<"]"<<endl;
 
-	val = mrb_iv_get(mrb, obj, mrb_intern_lit(mrb, "@outpath"));
-	strncpy(distImageFilePath, RSTRING_PTR( val ), RSTRING_LEN( val ));
-	distImageFilePath[RSTRING_LEN( val )]='\0';
-	cout << "distImageFilePath=["<<distImageFilePath<<"]"<<endl;
-
-	// 画像ファイルを読み込む
-	Image img;
-	img.read(srcImageFilePath);
+	img->read(srcImageFilePath);
 	/*
 	# これまでのコマンドを実行する。
 	*/
 	// lastIdx = @cmd.size-1
-	val = mrb_iv_get(mrb, obj, mrb_intern_lit(mrb, "@cmd"));
+	mrb_value val = mrb_iv_get(mrb, obj, mrb_intern_lit(mrb, "@cmd"));
 
 	int lastIdx = RARRAY_LEN(val) - 1;
 	cout << "lastIdx = " << lastIdx << endl;
@@ -133,7 +122,7 @@ extern "C" mrb_value mrb_mrmagick_write(mrb_state *mrb, mrb_value self)
 			v = mrb_ary_ref( mrb, params, 3);
 			strncpy(buf,RSTRING_PTR(v),RSTRING_LEN(v));
 			buf[RSTRING_LEN(v)]='\0';
-			img.scale(buf);
+			img->scale(buf);
 		} else {
 			//elsif c.include?("-blur") then
 			mrb_value v = mrb_funcall(mrb,c, "include?", 1, mrb_str_new_cstr(mrb, "-blur"));
@@ -157,11 +146,28 @@ extern "C" mrb_value mrb_mrmagick_write(mrb_state *mrb, mrb_value self)
 				float radius = mrb_float(v);
 				//cout<<"radius[0],radius[1] = "<<radius<<", "<<sigma<<endl;
 				// Mrmagick::Capi.blur(params[1], params[4], radius_sigma[0].to_f, sigma)
-				img.blur(radius, sigma);
+				img->blur(radius, sigma);
 			}
 		}
 		++idx;
 	}
+}
+extern "C" mrb_value mrb_mrmagick_write(mrb_state *mrb, mrb_value self)
+{
+	char srcImageFilePath[512],distImageFilePath[512],buf[256];
+	Image img;
+
+	mrb_value obj;
+	mrb_get_args(mrb, "o", &obj);
+	//mrb_funcall(mrb,mrb_top_self(mrb), "p", 1, obj);
+
+	mrb_value val = mrb_iv_get(mrb, obj, mrb_intern_lit(mrb, "@outpath"));
+	strncpy(distImageFilePath, RSTRING_PTR( val ), RSTRING_LEN( val ));
+	distImageFilePath[RSTRING_LEN( val )]='\0';
+	//cout << "distImageFilePath=["<<distImageFilePath<<"]"<<endl;
+
+	writeAndBlob(&img, mrb, obj);
+
 	img.write(distImageFilePath);
 		/*
 		else
@@ -171,6 +177,22 @@ extern "C" mrb_value mrb_mrmagick_write(mrb_state *mrb, mrb_value self)
 	end
 	*/
 	return mrb_nil_value();
+}
+
+extern "C" mrb_value mrb_mrmagick_to_blob(mrb_state *mrb, mrb_value self)
+{
+	mrb_value obj;
+  mrb_get_args(mrb, "o", &obj);
+  //mrb_funcall(mrb,mrb_top_self(mrb), "p", 1, obj);
+
+	Image img;
+	writeAndBlob(&img, mrb, obj);
+
+	Blob blob;
+	img.write(&blob);
+	mrb_value val;
+	val = mrb_str_new(mrb, (const char*)blob.data(),blob.length());
+	return val;
 }
 
 extern "C" void image_write(mrb_state *mrb, mrb_value val) {
