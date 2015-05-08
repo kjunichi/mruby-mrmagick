@@ -37,6 +37,14 @@ img.get_exif_by_entry('GPSLatitude')
 
 ```
 
+```ruby
+img = Mragick::ImageList.new("sample.jpg") # read image file.
+img2 = img.blur_image(0.0, 8.0) # returns new image which bluerd.
+File.open("blob.jpg", "wb") {|f|
+  f.print img2.to_blob
+}
+```
+
 ## License
 under the MIT License:
 - see LICENSE file
