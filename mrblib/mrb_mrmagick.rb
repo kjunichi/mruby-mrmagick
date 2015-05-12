@@ -118,6 +118,7 @@ module Mrmagick
 				@fRealFile = false
 			else
 				@fRealFile = true
+        srcImagePath=@image.gen
 			end
 			@images=[]
 
