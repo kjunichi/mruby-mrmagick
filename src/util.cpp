@@ -101,7 +101,9 @@ static void writeAndBlob(Image *img, mrb_state *mrb, mrb_value obj) {
 	*/
 	// lastIdx = @cmd.size-1
 	mrb_value val = mrb_iv_get(mrb, obj, mrb_intern_lit(mrb, "@cmd"));
-
+	if(mrb_nil_p(val)) {
+		return;
+	}
 	int lastIdx = RARRAY_LEN(val) - 1;
 	cout << "lastIdx = " << lastIdx << endl;
 	int idx=0;
@@ -154,7 +156,7 @@ static void writeAndBlob(Image *img, mrb_state *mrb, mrb_value obj) {
 }
 extern "C" mrb_value mrb_mrmagick_write(mrb_state *mrb, mrb_value self)
 {
-	char srcImageFilePath[512],distImageFilePath[512],buf[256];
+	char distImageFilePath[512];
 	Image img;
 
 	mrb_value obj;
