@@ -26,13 +26,17 @@ module Mrmagick
 
 		def magickCommand(cmd)
 			if @cmd.nil? then
-				# １番目のコマンドのソースパスを親のパス(実態のある画像ファイル)と仮定。
+				# １番目のコマンドのソースパスを親のパス(実体のある画像ファイル)と仮定。
 				params = cmd.split(" ")
 				@parentPath = params[1];
 				@cmd=[cmd]
 			else
 				@cmd.push(cmd)
 			end
+		end
+
+		def from_blob(blob)
+			Mrmagick::Capi.from_blob(self, blob)
 		end
 
 		def to_blob()
@@ -146,6 +150,10 @@ module Mrmagick
 
 		def to_blob()
 			@image.to_blob()
+		end
+
+		def from_blob(blob)
+			@image.from_blob(blob)
 		end
 
 		def magickCommand(cmd)

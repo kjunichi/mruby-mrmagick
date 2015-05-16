@@ -13,4 +13,7 @@ MRuby::Gem::Specification.new('mruby-mrmagick') do |spec|
   spec.linker.flags_before_libraries << magick_libs
   #ossp_uuid_libs = `uuid-config --ldflags --libs`.chomp!
   #spec.linker.flags_before_libraries << ossp_uuid_libs
+  spec.add_dependency 'mruby-io'
+  spec.add_dependency 'mruby-array-ext'
+  spec.add_dependency 'mruby-print'
 end
