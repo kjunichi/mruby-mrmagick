@@ -20,6 +20,7 @@ assert("Mrmagick::Image#scale") do
   `convert -scale 50% output.png dest.png`
   `composite -compose difference dest.png t.png diff.png`
   t= `identify -format "%[mean]" diff.png`
+  t.gsub!("\n","")
   assert_equal("0",t)
   tearDownTestImage
 end
@@ -30,6 +31,7 @@ assert("Mrmagick::Image#blur_image") do
   `convert -blur 1.0x8.0 output.png dest.png`
   `composite -compose difference dest.png t.png diff.png`
   t= `identify -format "%[mean]" diff.png`
+  t.gsub!("\n","")
   assert_equal("0",t)
   tearDownTestImage
 end
