@@ -32,7 +32,7 @@ img3.write("blur_x4.jpg")
 ```
 
 ```ruby
-img = Mrmagick::ImageList.new("sample.png") # read image file.
+img = Mrmagick::ImageList.new("sample.jpg") # read image file.
 img.get_exif_by_entry('GPSLatitude')
 
 ```
@@ -44,6 +44,10 @@ File.open("blob.jpg", "wb") {|f|
   f.print img2.to_blob
 }
 ```
+
+## See also
+
+- [ngx_mrubyを使った簡単な画像変換サーバを数分で実装してみた - 人間とウェブの未来](http://hb.matsumoto-r.jp/entry/2015/05/13/234326)
 
 ## License
 under the MIT License:
