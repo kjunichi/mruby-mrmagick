@@ -7,6 +7,7 @@
 #include "mruby/string.h"
 #include "mruby/array.h"
 #include "mruby/variable.h"
+#include "mruby/hash.h"
 
 using namespace std;
 using namespace Magick;
@@ -96,6 +97,58 @@ static void writeAndBlob(Image *img, mrb_state *mrb, mrb_value obj) {
 	//cout << "srcImageFilePath=["<<srcImageFilePath<<"]"<<endl;
 
 	img->read(srcImageFilePath);
+
+	mrb_value ov = mrb_iv_get(mrb, obj, mrb_intern_lit(mrb, "@orientationv"));
+	if(mrb_fixnum_p(ov)) {
+		int orientation = mrb_fixnum(ov);
+		//cout << "orientation = "<< mrb_fixnum(ov) << endl;
+		switch (orientation) {
+			case 1:
+				img->orientation(TopLeftOrientation);
+				break;
+			case 2:
+			img->orientation(TopRightOrientation);
+			break;
+			case 3:
+			img->orientation(BottomRightOrientation);
+			break;
+			case 4:
+			img->orientation(BottomLeftOrientation);
+			break;
+			case 5:
+			img->orientation(LeftTopOrientation);
+			break;
+			case 6:
+			img->orientation(RightTopOrientation);
+			break;
+			case 7:
+			img->orientation(RightBottomOrientation);
+			break;
+			case 8:
+			img->orientation(LeftBottomOrientation);
+			break;
+			default:
+			break;
+		}
+	}
+	// exif処理
+	// ハッシュに登録されている項目を書き込む
+	mrb_value exifObj = mrb_iv_get(mrb, obj, mrb_intern_lit(mrb, "@exif"));
+	//mrb_funcall(mrb,mrb_top_self(mrb), "p", 1, exifObj);
+	if(mrb_hash_p(exifObj)) {
+		mrb_value keys = mrb_hash_keys(mrb, exifObj);
+		int len = RARRAY_LEN(keys);
+		//cout << "exifObj.len = " << len << endl;
+		for(int i = 0; i < len; i++) {
+			mrb_value key = mrb_ary_ref(mrb, keys, i);
+			mrb_value ev = mrb_hash_get(mrb, exifObj, key);
+			string exifValue(RSTRING_PTR(ev), RSTRING_LEN(ev));
+			string exiftag = "EXIF:";
+			exiftag.append(RSTRING_PTR(key),RSTRING_LEN(key));
+			//cout << exiftag << "," << exifValue << endl;
+			img->attribute(exiftag, exifValue);
+		}
+	}
 	/*
 	# これまでのコマンドを実行する。
 	*/
@@ -125,31 +178,51 @@ static void writeAndBlob(Image *img, mrb_state *mrb, mrb_value obj) {
 			strncpy(buf,RSTRING_PTR(v),RSTRING_LEN(v));
 			buf[RSTRING_LEN(v)]='\0';
 			img->scale(buf);
-		} else {
-			//elsif c.include?("-blur") then
-			mrb_value v = mrb_funcall(mrb,c, "include?", 1, mrb_str_new_cstr(mrb, "-blur"));
-			if(mrb_bool(v)) {
-				// radius_sigma=params[3].split(",")
-				mrb_value params_3 = mrb_ary_ref( mrb, params, 3);
-				mrb_value radius_sigma = mrb_funcall(mrb,params_3, "split", 1, mrb_str_new_cstr(mrb, ","));
+		}
+		//elsif c.include?("-blur") then
+		v = mrb_funcall(mrb,c, "include?", 1, mrb_str_new_cstr(mrb, "-blur"));
+		if(mrb_bool(v)) {
+			// radius_sigma=params[3].split(",")
+			mrb_value params_3 = mrb_ary_ref( mrb, params, 3);
+			mrb_value radius_sigma = mrb_funcall(mrb,params_3, "split", 1, mrb_str_new_cstr(mrb, ","));
 				// if radius_sigma.length<2 then
 				//   sigma = 0.5
 			 	// else
 				//   sigma = radius_sigma[1].to_f;
 			 	// end
-				v = mrb_funcall(mrb,radius_sigma, "length", 0);
-				float sigma = 0.5;
-				if(mrb_fixnum(v)>=2) {
-						mrb_value radius_sigma_1 = mrb_ary_ref( mrb, radius_sigma, 1);
+			v = mrb_funcall(mrb,radius_sigma, "length", 0);
+			float sigma = 0.5;
+			if(mrb_fixnum(v)>=2) {
+					mrb_value radius_sigma_1 = mrb_ary_ref( mrb, radius_sigma, 1);
 						v = mrb_funcall(mrb, radius_sigma_1, "to_f",0);
 						sigma = mrb_float(v);
-				}
-				v = mrb_funcall(mrb, mrb_ary_ref(mrb, radius_sigma, 0),"to_f", 0);
-				float radius = mrb_float(v);
+			}
+			v = mrb_funcall(mrb, mrb_ary_ref(mrb, radius_sigma, 0),"to_f", 0);
+			float radius = mrb_float(v);
 				//cout<<"radius[0],radius[1] = "<<radius<<", "<<sigma<<endl;
 				// Mrmagick::Capi.blur(params[1], params[4], radius_sigma[0].to_f, sigma)
-				img->blur(radius, sigma);
-			}
+			img->blur(radius, sigma);
+
+		}
+		v = mrb_funcall(mrb,c, "include?", 1, mrb_str_new_cstr(mrb, "-rotate"));
+		if(mrb_bool(v)) {
+			//cout<<"-rotate"<<endl;
+			v = mrb_ary_ref( mrb, params, 3);
+			//mrb_funcall(mrb,mrb_top_self(mrb), "p", 1, v);
+			v = mrb_funcall(mrb, v,"to_f", 0);
+			float rot = mrb_float(v);
+			//cout << "rot = " <<rot<<endl;
+			img->rotate((double)rot);
+		}
+		v = mrb_funcall(mrb,c, "include?", 1, mrb_str_new_cstr(mrb, "-flop"));
+		if(mrb_bool(v)) {
+			cout<<"-flop"<<endl;
+			img->flop();
+		}
+		v = mrb_funcall(mrb,c, "include?", 1, mrb_str_new_cstr(mrb, "-flip"));
+		if(mrb_bool(v)) {
+			cout<<"-flip"<<endl;
+			img->flip();
 		}
 		++idx;
 	}
