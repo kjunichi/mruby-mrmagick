@@ -17,12 +17,10 @@
 
 extern void myputs();
 extern void scale(const char *src_path, const char *dst_path, const char*ratio);
-//extern void rotate(const char *src_path, const char *dst_path, const double rot);
 extern void blur(const char *src_path, const char *dst_path,
                  const double radius, const double sigma);
 extern mrb_value mrb_mrmagick_write(mrb_state *mrb, mrb_value self);
 extern mrb_value mrb_mrmagick_get_exif_by_entry(mrb_state *mrb, mrb_value self);
-extern mrb_value mrb_mrmagick_set_exif_by_entry(mrb_state *mrb, mrb_value self);
 extern mrb_value mrb_mrmagick_to_blob(mrb_state *mrb, mrb_value self);
 extern mrb_value mrb_mrmagick_from_blob(mrb_state *mrb, mrb_value self);
 
@@ -83,17 +81,7 @@ static mrb_value mrb_mrmagick_blur(mrb_state *mrb, mrb_value self)
   blur(src_path, dst_path, (double)radius, (double)sigma);
   return mrb_str_new_cstr(mrb, "hi!!");
 }
-/*
-static mrb_value mrb_mrmagick_rotate(mrb_state *mrb, mrb_value self)
-{
-  char *src_path, *dst_path;
-  mrb_float rot;
 
-  mrb_get_args(mrb, "zzf", &src_path, &dst_path, &rot);
-  rotate(src_path, dst_path, (double)rot);
-  return mrb_str_new_cstr(mrb, "hi!!");
-}
-*/
 /*
 static mrb_value mrb_mrmagick_uuid(mrb_state *mrb, mrb_value self)
 {
@@ -157,8 +145,6 @@ void mrb_mruby_mrmagick_gem_init(mrb_state *mrb)
   mrb_define_class_method(mrb, mrmagick, "to_blob", mrb_mrmagick_to_blob, MRB_ARGS_REQ(1));
   mrb_define_class_method(mrb, mrmagick, "from_blob", mrb_mrmagick_to_blob, MRB_ARGS_REQ(2));
   mrb_define_class_method(mrb, mrmagick, "get_exif_by_entry", mrb_mrmagick_get_exif_by_entry, MRB_ARGS_REQ(1));
-  //mrb_define_class_method(mrb, mrmagick, "set_exif_by_entry", mrb_mrmagick_set_exif_by_entry, MRB_ARGS_REQ(2));
-  //mrb_define_class_method(mrb, mrmagick, "rotate", mrb_mrmagick_rotate, MRB_ARGS_REQ(3));
   //mrb_define_class_method(mrb, mrmagick, "uuid", mrb_mrmagick_uuid, MRB_ARGS_NONE());
   DONE;
 }

@@ -56,7 +56,7 @@ extern "C" mrb_value mrb_mrmagick_get_exif_by_entry(mrb_state *mrb, mrb_value se
 
 	mrb_value obj,val;
   mrb_get_args(mrb, "o", &obj);
-  mrb_funcall(mrb,mrb_top_self(mrb), "p", 1, obj);
+  //mrb_funcall(mrb,mrb_top_self(mrb), "p", 1, obj);
 	val = mrb_iv_get(mrb, obj, mrb_intern_lit(mrb, "@exifKey"));
 	strncpy(buf,RSTRING_PTR(val),RSTRING_LEN(val));
 	buf[RSTRING_LEN(val)]='\0';
@@ -165,10 +165,10 @@ static void writeAndBlob(Image *img, mrb_state *mrb, mrb_value obj) {
 	int num_cmds = RARRAY_LEN(val);
 	for(int i = 0; i < num_cmds; ++i) {
   	mrb_value c = mrb_ary_ref(mrb, val, i);
-		mrb_funcall(mrb,mrb_top_self(mrb), "p", 1, c);
+		//mrb_funcall(mrb,mrb_top_self(mrb), "p", 1, c);
 		//params = c.split(" ")
 		mrb_value params = mrb_funcall(mrb,c, "split", 1, mrb_str_new_cstr(mrb, " "));
-		mrb_funcall(mrb,mrb_top_self(mrb), "p", 1, params);
+		//mrb_funcall(mrb,mrb_top_self(mrb), "p", 1, params);
 
 		// if c.include?("-resize") then
 		mrb_value v = mrb_funcall(mrb,c, "include?", 1, mrb_str_new_cstr(mrb, "-resize"));
@@ -216,12 +216,12 @@ static void writeAndBlob(Image *img, mrb_state *mrb, mrb_value obj) {
 		}
 		v = mrb_funcall(mrb,c, "include?", 1, mrb_str_new_cstr(mrb, "-flop"));
 		if(mrb_bool(v)) {
-			cout<<"-flop"<<endl;
+			//cout<<"-flop"<<endl;
 			img->flop();
 		}
 		v = mrb_funcall(mrb,c, "include?", 1, mrb_str_new_cstr(mrb, "-flip"));
 		if(mrb_bool(v)) {
-			cout<<"-flip"<<endl;
+			//cout<<"-flip"<<endl;
 			img->flip();
 		}
 		++idx;
