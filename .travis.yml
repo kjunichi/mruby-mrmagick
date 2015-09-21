@@ -4,7 +4,7 @@ compiler:
   - clang
 before_install:
   - sudo apt-get -qq update
-  - sudo apt-get install -qq texinfo libtiff5-dev
+  - sudo apt-get install -qq texinfo libtiff-dev
   - cd ..
   - git clone http://git.sv.gnu.org/r/autoconf.git
   - cd autoconf
