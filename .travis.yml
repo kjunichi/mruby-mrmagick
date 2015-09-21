@@ -4,7 +4,13 @@ compiler:
   - clang
 before_install:
   - sudo apt-get -qq update
-  - sudo apt-get -y --reinstall install autoconf
+  - cd ..
+  - git clone http://git.sv.gnu.org/r/autoconf.git
+  - cd autoconf
+  - ./configure --prefix=/usr
+  - make
+  - sudo make install
+  - cd ..
   - git clone https://github.com/ImageMagick/ImageMagick
   - cd ImageMagick
   - ./configure --prefix=/usr
