@@ -12,6 +12,7 @@ MRuby::Build.new do |conf|
 end
 ```
 ## example
+
 ```ruby
 img = Mrmagick::ImageList.new("sample.png") # read image file.
 new_img = img.blur_image(0.0, 8.0) # returns new image which bluerd.
@@ -43,6 +44,15 @@ img2 = img.blur_image(0.0, 8.0) # returns new image which bluerd.
 File.open("blob.jpg", "wb") {|f|
   f.print img2.to_blob
 }
+```
+
+```ruby
+img = Mrmagick::ImageList.new("sample_with_exif.jpg")
+img.orientation # => 2
+img = img.auto_orient
+img.write("sample_ao.jpg")
+img = Mrmagick::ImageList.new("sample_ao.jpg")
+img.orientation # => 1
 ```
 
 ## See also
