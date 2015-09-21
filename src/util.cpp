@@ -104,19 +104,20 @@ static void writeAndBlob(Image *img, mrb_state *mrb, mrb_value obj) {
 	if(mrb_fixnum_p(ov)) {
 		Blob blob = img->profile("exif");
 		if(blob.data() == NULL) {
-			cout<<"blob is Null"<<endl;
+			// we generate dummy exif data.
+			//cout<<"blob is Null"<<endl;
 			Blob exifdata(dexifData,dexifDataLength);
 			img->profile("exif",exifdata);
 			// make own exif data.
-		} else {
-			cout <<"blob.length = "<<blob.length()<<endl;
+		}/* else {
+			//cout <<"blob.length = "<<blob.length()<<endl;
 			unsigned char *buf = (unsigned char*)blob.data();
 			int len = blob.length();
 			for(int i=0; i< len;i++) {
 			cout <<":"<< (unsigned int)buf[i];
 			}
 			cout<<endl;
-		}
+		}*/
 
 		int orientation = mrb_fixnum(ov);
 		cout << "orientation = "<< mrb_fixnum(ov) << endl;
