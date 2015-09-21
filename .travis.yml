@@ -9,7 +9,7 @@ before_install:
   - cd autoconf
   - ls
   - aclocal -I m4
-  - automake
+  - automake -a
   - autoconf
   - ./configure --prefix=/usr
   - make
