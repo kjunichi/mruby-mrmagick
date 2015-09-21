@@ -7,7 +7,9 @@ before_install:
   - cd ..
   - git clone http://git.sv.gnu.org/r/autoconf.git
   - cd autoconf
-  - ./autogen.sh
+  - ls
+  - (autoconf)
+  - autoconf
   - ./configure --prefix=/usr
   - make
   - sudo make install
