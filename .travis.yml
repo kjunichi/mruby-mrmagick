@@ -4,7 +4,7 @@ compiler:
   - clang
 before_install:
   - sudo apt-get -qq update
-  - sudo apt-get install texinfo
+  - sudo apt-get install -qq texinfo libtiff5-dev
   - cd ..
   - git clone http://git.sv.gnu.org/r/autoconf.git
   - cd autoconf
@@ -18,12 +18,13 @@ before_install:
   - cd ..
   - git clone https://github.com/ImageMagick/ImageMagick
   - cd ImageMagick
+  - git checkout ImageMagick-6
   - ./configure --prefix=/usr
   - make -j4
   - sudo make install
   - cd ..
 install:
-    - sudo apt-get -qq install rake bison git gperf libmagick++-dev libossp-uuid-dev
+    - sudo apt-get -qq install rake bison git gperf
 before_script:
   - git clone https://github.com/mruby/mruby.git
   - cd mruby
