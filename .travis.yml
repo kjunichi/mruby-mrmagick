@@ -23,7 +23,7 @@ before_script:
   - ./configure --prefix=/usr
   - make -j4
   - which clang
-  - sudo -E make install
+  - sudo PATH=/usr/local/clang-3.4/bin:$PATH make install
   - cd ..
   - git clone https://github.com/mruby/mruby.git
   - cd mruby
