@@ -4,11 +4,12 @@ compiler:
   - clang
 before_install:
   - sudo apt-get -qq update
-  - sudo apt-get install -qq texinfo libtiff-dev
+install:
+  - sudo apt-get -qq install rake bison git gperf texinfo libtiff-dev
+before_script:
   - cd ..
   - git clone http://git.sv.gnu.org/r/autoconf.git
   - cd autoconf
-  - ls
   - aclocal -I m4
   - automake -a
   - autoconf
@@ -23,9 +24,6 @@ before_install:
   - make -j4
   - sudo make install
   - cd ..
-install:
-    - sudo apt-get -qq install rake bison git gperf
-before_script:
   - git clone https://github.com/mruby/mruby.git
   - cd mruby
   - cp -fp ../mruby-mrmagick/.travis_build_config.rb build_config.rb
