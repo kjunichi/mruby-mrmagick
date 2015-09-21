@@ -22,6 +22,7 @@ before_script:
   - git checkout ImageMagick-6
   - ./configure --prefix=/usr
   - make -j4
+  - which clang
   - sudo make install
   - cd ..
   - git clone https://github.com/mruby/mruby.git
