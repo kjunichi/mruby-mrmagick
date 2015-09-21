@@ -9,6 +9,8 @@
 #include "mruby/variable.h"
 #include "mruby/hash.h"
 
+#include "dummy_exif.h"
+
 using namespace std;
 using namespace Magick;
 
@@ -100,32 +102,56 @@ static void writeAndBlob(Image *img, mrb_state *mrb, mrb_value obj) {
 
 	mrb_value ov = mrb_iv_get(mrb, obj, mrb_intern_lit(mrb, "@orientationv"));
 	if(mrb_fixnum_p(ov)) {
+		Blob blob = img->profile("exif");
+		if(blob.data() == NULL) {
+			cout<<"blob is Null"<<endl;
+			Blob exifdata(dexifData,dexifDataLength);
+			img->profile("exif",exifdata);
+			// make own exif data.
+		} else {
+			cout <<"blob.length = "<<blob.length()<<endl;
+			unsigned char *buf = (unsigned char*)blob.data();
+			int len = blob.length();
+			for(int i=0; i< len;i++) {
+			cout <<":"<< (unsigned int)buf[i];
+			}
+			cout<<endl;
+		}
+
 		int orientation = mrb_fixnum(ov);
-		//cout << "orientation = "<< mrb_fixnum(ov) << endl;
+		cout << "orientation = "<< mrb_fixnum(ov) << endl;
 		switch (orientation) {
 			case 1:
 				img->orientation(TopLeftOrientation);
+				img->attribute("EXIF:Orientation", "1");
 				break;
 			case 2:
 			img->orientation(TopRightOrientation);
+			img->attribute("EXIF:Orientation", "2");
 			break;
 			case 3:
 			img->orientation(BottomRightOrientation);
+			img->attribute("EXIF:Orientation", "3");
 			break;
 			case 4:
 			img->orientation(BottomLeftOrientation);
+			img->attribute("EXIF:Orientation", "4");
 			break;
 			case 5:
 			img->orientation(LeftTopOrientation);
+			img->attribute("EXIF:Orientation", "5");
 			break;
 			case 6:
 			img->orientation(RightTopOrientation);
+			img->attribute("EXIF:Orientation", "6");
 			break;
 			case 7:
 			img->orientation(RightBottomOrientation);
+			img->attribute("EXIF:Orientation", "7");
 			break;
 			case 8:
 			img->orientation(LeftBottomOrientation);
+			img->attribute("EXIF:Orientation", "8");
 			break;
 			default:
 			break;

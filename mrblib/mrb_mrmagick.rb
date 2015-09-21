@@ -102,7 +102,6 @@ module Mrmagick
       #p srcImagePath
       destImage.magickCommand("convert #{srcImagePath} -rotate #{rot} #{destImage.getPath}")
       destImage
-
     end
 
     def flop
