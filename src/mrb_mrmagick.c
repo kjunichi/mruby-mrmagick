@@ -57,13 +57,6 @@ static mrb_value mrb_mrmagick_init(mrb_state *mrb, mrb_value self)
   return self;
 }
 
-static mrb_value mrb_mrmagick_hello(mrb_state *mrb, mrb_value self)
-{
-  mrb_mrmagick_data *data = DATA_PTR(self);
-
-  return mrb_str_new(mrb, data->str, data->len);
-}
-
 static mrb_value mrb_mrmagick_scale(mrb_state *mrb, mrb_value self)
 {
   char *src_path, *dst_path, *ratio;
@@ -82,23 +75,6 @@ static mrb_value mrb_mrmagick_blur(mrb_state *mrb, mrb_value self)
   blur(src_path, dst_path, (double)radius, (double)sigma);
   return mrb_str_new_cstr(mrb, "hi!!");
 }
-
-/*
-static mrb_value mrb_mrmagick_uuid(mrb_state *mrb, mrb_value self)
-{
-  char *uuid_str;
-  uuid_t *uuid;
-
-  uuid_create(&uuid);
-  uuid_make(uuid, UUID_MAKE_V4);
-  uuid_str = NULL;
-  uuid_export(uuid, UUID_FMT_STR, (void**)&uuid_str, NULL);
-  uuid_destroy(uuid);
-
-  return mrb_str_new_cstr(mrb, uuid_str);
-}
-*/
-
 
 static mrb_value mrb_mrmagick_rm(mrb_state *mrb, mrb_value self)
 {
@@ -121,13 +97,6 @@ static mrb_value mrb_mrmagick_rm(mrb_state *mrb, mrb_value self)
   return mrb_str_new_cstr(mrb, "hi!!");
 }
 
-
-static mrb_value mrb_mrmagick_hi(mrb_state *mrb, mrb_value self)
-{
-  myputs();
-  return mrb_str_new_cstr(mrb, "hi!!");
-}
-
 void mrb_mruby_mrmagick_gem_init(mrb_state *mrb)
 {
   struct RClass *mrmagick_module;
@@ -137,8 +106,6 @@ void mrb_mruby_mrmagick_gem_init(mrb_state *mrb)
   mrmagick = mrb_define_class_under(mrb, mrmagick_module, "Capi", mrb->object_class);
 
   mrb_define_method(mrb, mrmagick, "initialize", mrb_mrmagick_init, MRB_ARGS_REQ(1));
-  mrb_define_method(mrb, mrmagick, "hello", mrb_mrmagick_hello, MRB_ARGS_NONE());
-  mrb_define_class_method(mrb, mrmagick, "hi", mrb_mrmagick_hi, MRB_ARGS_NONE());
   mrb_define_class_method(mrb, mrmagick, "scale", mrb_mrmagick_scale, MRB_ARGS_REQ(3));
   mrb_define_class_method(mrb, mrmagick, "blur", mrb_mrmagick_blur, MRB_ARGS_REQ(4));
   mrb_define_class_method(mrb, mrmagick, "rm", mrb_mrmagick_rm, MRB_ARGS_REQ(1));
@@ -146,7 +113,6 @@ void mrb_mruby_mrmagick_gem_init(mrb_state *mrb)
   mrb_define_class_method(mrb, mrmagick, "to_blob", mrb_mrmagick_to_blob, MRB_ARGS_REQ(1));
   mrb_define_class_method(mrb, mrmagick, "from_blob", mrb_mrmagick_to_blob, MRB_ARGS_REQ(2));
   mrb_define_class_method(mrb, mrmagick, "get_exif_by_entry", mrb_mrmagick_get_exif_by_entry, MRB_ARGS_REQ(1));
-  //mrb_define_class_method(mrb, mrmagick, "uuid", mrb_mrmagick_uuid, MRB_ARGS_NONE());
   DONE;
 }
 
