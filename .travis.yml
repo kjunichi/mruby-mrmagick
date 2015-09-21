@@ -8,7 +8,7 @@ before_install:
   - git clone http://git.sv.gnu.org/r/autoconf.git
   - cd autoconf
   - ls
-  - aclocal
+  - aclocal -I m4
   - autoconf
   - ./configure --prefix=/usr
   - make
