@@ -9,11 +9,6 @@ def tearDownTestImage
   `rm -f t.png dest.png diff.png output.png`
 end
 
-assert("Mrmagick::Capi#hello") do
-  t = Mrmagick::Capi.new "hello"
-  assert_equal("hello", t.hello)
-end
-
 assert("Mrmagick::Image#scale") do
   setupTestImage
   Mrmagick::ImageList.new("output.png").scale(0.5).write("t.png")
@@ -101,8 +96,4 @@ end
 
 assert("Mrmagick::ImageList#bye") do
   assert_equal("bye", Mrmagick::ImageList.bye)
-end
-
-assert("Mrmagick::Capi.hi") do
-  assert_equal("hi!!", Mrmagick::Capi.hi)
 end
