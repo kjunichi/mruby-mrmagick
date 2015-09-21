@@ -6,7 +6,7 @@ def setupTestImage
 end
 
 def tearDownTestImage
-  `rm t.png dest.png diff.png output.png`
+  `rm -f t.png dest.png diff.png output.png`
 end
 
 assert("Mrmagick::Capi#hello") do
@@ -33,6 +33,69 @@ assert("Mrmagick::Image#blur_image") do
   t= `identify -format "%[mean]" diff.png`
   t.gsub!("\n","")
   assert_equal("0",t)
+  tearDownTestImage
+end
+
+assert("Mrmagick::Image#rotate") do
+  setupTestImage
+  Mrmagick::ImageList.new("output.png").rotate(30).write("t.png")
+  `convert -rotate 30 output.png dest.png`
+  `composite -compose difference dest.png t.png diff.png`
+  t= `identify -format "%[mean]" diff.png`
+  t.gsub!("\n","")
+  assert_equal("0",t)
+  tearDownTestImage
+end
+
+assert("Mrmagick::Image#flop") do
+  setupTestImage
+  Mrmagick::ImageList.new("output.png").flop.write("t.png")
+  `convert -flop output.png dest.png`
+  `composite -compose difference dest.png t.png diff.png`
+  t= `identify -format "%[mean]" diff.png`
+  t.gsub!("\n","")
+  assert_equal("0",t)
+  tearDownTestImage
+end
+
+assert("Mrmagick::Image#flip") do
+  setupTestImage
+  Mrmagick::ImageList.new("output.png").flip.write("t.png")
+  `convert -flip output.png dest.png`
+  `composite -compose difference dest.png t.png diff.png`
+  t= `identify -format "%[mean]" diff.png`
+  t.gsub!("\n","")
+  assert_equal("0",t)
+  tearDownTestImage
+end
+
+assert("Mrmagick::Image#orientation") do
+  setupTestImage
+  o = Mrmagick::ImageList.new("output.png").orientation
+  assert_equal("",o)
+  t = Mrmagick::ImageList.new("output.png")
+  t.orientation=1
+  t.write("t.png")
+  t = Mrmagick::ImageList.new("t.png")
+  assert_equal("1",t.orientation)
+  t = Mrmagick::ImageList.new("output.png")
+  t.orientation=7
+  t.write("t.jpg")
+  t = Mrmagick::ImageList.new("t.jpg")
+  assert_equal("7",t.orientation)
+  tearDownTestImage
+end
+
+assert("Mrmagick::Image#auto_orient") do
+  setupTestImage
+  o = Mrmagick::ImageList.new("output.png")
+  o.orientation=5
+  o.write("t.jpg")
+  t = Mrmagick::ImageList.new("t.jpg")
+  t=t.auto_orient
+  t.write("t.jpg")
+  t = Mrmagick::ImageList.new("t.jpg")
+  assert_equal("1",t.orientation)
   tearDownTestImage
 end
 

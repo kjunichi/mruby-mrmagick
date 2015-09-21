@@ -6,7 +6,8 @@ module Mrmagick
   class Image
     def initialize(path)
       @origImagePath = path
-      p @origImagePath
+      @exif={}
+      #p @origImagePath
       # return self
     end
 
@@ -17,6 +18,10 @@ module Mrmagick
     def get_exif_by_entry(key)
       @exifKey = key
       Mrmagick::Capi.get_exif_by_entry(self)
+    end
+
+    def set_exif_by_entry(key, value)
+      @exif[key] = value
     end
 
     def setParentImage(images)
@@ -32,6 +37,7 @@ module Mrmagick
         @cmd = [cmd]
       else
         @cmd.push(cmd)
+        p self
       end
     end
 
@@ -90,6 +96,78 @@ module Mrmagick
       end
     end
 
+    def rotate(rot)
+      destImage = ImageList::createVirtualImageList
+      srcImagePath = gen
+      #p srcImagePath
+      destImage.magickCommand("convert #{srcImagePath} -rotate #{rot} #{destImage.getPath}")
+      destImage
+    end
+
+    def flop
+      destImage = ImageList::createVirtualImageList
+      srcImagePath = gen
+      destImage.magickCommand("convert #{srcImagePath} -flop #{destImage.getPath}")
+      destImage
+    end
+
+    def flip
+      #p "flip"
+      destImage = ImageList::createVirtualImageList
+      srcImagePath = gen
+      destImage.magickCommand("convert #{srcImagePath} -flip #{destImage.getPath}")
+      destImage
+    end
+
+    def transpose
+      destImage = createVirtualImageList
+      srcImagePath = gen
+      destImage.magickCommand("convert #{srcImagePath} -rotate 90 #{destImage.getPath}")
+      destImage.magickCommand("convert #{srcImagePath} -flop #{destImage.getPath}")
+      destImage
+    end
+
+    def transverse
+      destImage = createVirtualImageList
+      srcImagePath = gen
+      destImage.magickCommand("convert #{srcImagePath} -rotate 270 #{destImage.getPath}")
+      destImage.magickCommand("convert #{srcImagePath} -flop #{destImage.getPath}")
+      destImage
+    end
+
+    def orientation=(v)
+      @orientationv = v
+    end
+
+    def orientation
+      @exifKey = "Orientation"
+      orient = Mrmagick::Capi.get_exif_by_entry(self)
+    end
+
+    def auto_orient
+      orient = self.orientation
+      case orient
+      when "2" then
+        destImage = self.flop
+      when "3" then
+        destImage = self.rotate(180)
+      when "4" then
+        destImage = self.flip
+      when "5" then
+        destImage = self.transpose
+      when "6" then
+        destImage = self.rotate(90)
+      when "7" then
+        destImage = self.transverse
+      when "8" then
+        destImage = self.roteate(270)
+      else
+        destImage = self.rotate(0)
+      end
+      destImage.orientation=1
+      destImage
+    end
+
     def gen
       # 自分のファイルパスを出力する。
       return @origImagePath if @origImagePath.length > 0
@@ -126,6 +204,42 @@ module Mrmagick
       @image.get_exif_by_entry(key)
     end
 
+    def set_exif_by_entry(key, value)
+      @image.set_exif_by_entry(key, value)
+    end
+
+    def orientation=(v)
+        @image.orientation = v
+    end
+
+    def orientation
+      @image.orientation
+    end
+
+    def auto_orient
+      orient = orientation
+      case orient
+      when "2" then
+        destImage = self.flop()
+      when "3" then
+        destImage = self.rotate(180)
+      when "4" then
+        destImage = self.flip()
+      when "5" then
+        destImage = self.transpose()
+      when "6" then
+        destImage = self.rotate(90)
+      when "7" then
+        destImage = self.transverse()
+      when "8" then
+        destImage = self.rotate(270)
+      else
+        destImage = self.rotate(0)
+      end
+      destImage.orientation=1
+      destImage
+    end
+
     def setParentImages(images)
       @images.push(images)
       @images.flatten!
@@ -148,11 +262,18 @@ module Mrmagick
     end
 
     def magickCommand(cmd)
-      # puts "magickCommand"
-      puts cmd
+      #puts "magickCommand: " + cmd
+
       @images.each do|savedCmd|
+        #puts "savedCmd: " + savedCmd
         @image.magickCommand(savedCmd)
       end
+      @image.magickCommand(cmd)
+      @images.push(cmd)
+    end
+
+    def magickCommand2(cmd)
+      #puts "magickCommand2: " + cmd
       @image.magickCommand(cmd)
       @images.push(cmd)
     end
@@ -186,6 +307,43 @@ module Mrmagick
       destImage = createVirtualImageList
       srcImagePath = @image.gen
       destImage.magickCommand("convert #{srcImagePath} -resize #{param} #{destImage.getPath}")
+      destImage
+    end
+
+    def rotate(rot)
+      destImage = createVirtualImageList
+      srcImagePath = @image.gen
+      destImage.magickCommand("convert #{srcImagePath} -rotate #{rot} #{destImage.getPath}")
+      destImage
+    end
+
+    def flop
+      destImage = createVirtualImageList
+      srcImagePath = @image.gen
+      destImage.magickCommand("convert #{srcImagePath} -flop #{destImage.getPath}")
+      destImage
+    end
+
+    def flip
+      destImage = createVirtualImageList
+      srcImagePath = @image.gen
+      destImage.magickCommand("convert #{srcImagePath} -flip #{destImage.getPath}")
+      destImage
+    end
+
+    def transpose
+      destImage = createVirtualImageList
+      srcImagePath = @image.gen
+      destImage.magickCommand("convert #{srcImagePath} -rotate 90 #{destImage.getPath}")
+      destImage.magickCommand2("convert #{srcImagePath} -flop #{destImage.getPath}")
+      destImage
+    end
+
+    def transverse
+      destImage = createVirtualImageList
+      srcImagePath = @image.gen
+      destImage.magickCommand("convert #{srcImagePath} -rotate 270 #{destImage.getPath}")
+      destImage.magickCommand2("convert #{srcImagePath} -flop #{destImage.getPath}")
       destImage
     end
 

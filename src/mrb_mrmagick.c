@@ -15,6 +15,7 @@
 #include "mruby/array.h"
 #include "mrb_mrmagick.h"
 
+
 extern void myputs();
 extern void scale(const char *src_path, const char *dst_path, const char*ratio);
 extern void blur(const char *src_path, const char *dst_path,
