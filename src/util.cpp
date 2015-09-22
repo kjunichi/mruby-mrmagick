@@ -24,12 +24,11 @@ void myInitializeMagick()
   }
 }
 
-static void getSrcImageFilePath(mrb_state *mrb, mrb_value obj, char *buf)
+static void getSrcImageFilePath(mrb_state *mrb, mrb_value obj, string *path)
 {
   mrb_value val = mrb_iv_get(mrb, obj, mrb_intern_lit(mrb, "@parentPath"));
-
-  strncpy(buf, RSTRING_PTR( val ), RSTRING_LEN( val ));
-  buf[RSTRING_LEN( val )] = '\0';
+  string filepath(RSTRING_PTR( val ), RSTRING_LEN( val ));
+  *path = filepath;
 }
 
 extern "C" void scale(const char *srcPath, const char *destPath, const char *ratio)
@@ -55,22 +54,20 @@ extern "C" void blur(const char *srcPath, const char *destPath,
 }
 extern "C" mrb_value mrb_mrmagick_get_exif_by_entry(mrb_state *mrb, mrb_value self)
 {
-  char srcImageFilePath[512], buf[1024 * 20];
+  string srcImageFilePath;
+
 
   mrb_value obj, val;
 
   mrb_get_args(mrb, "o", &obj);
   //mrb_funcall(mrb,mrb_top_self(mrb), "p", 1, obj);
   val = mrb_iv_get(mrb, obj, mrb_intern_lit(mrb, "@exifKey"));
-  strncpy(buf, RSTRING_PTR(val), RSTRING_LEN(val));
-  buf[RSTRING_LEN(val)] = '\0';
-  //cout<<buf<<endl;
-  string exiftag = "EXIF:";
-  exiftag.append(buf);
-  getSrcImageFilePath(mrb, obj, srcImageFilePath);
+  string tmpstr(RSTRING_PTR(val), RSTRING_LEN(val));
+  string exiftag = "EXIF:" + tmpstr;
+  getSrcImageFilePath(mrb, obj, &srcImageFilePath);
   Image img;
   //cout << "srcImageFilePath = [" << srcImageFilePath << "]"<<endl;
-  img.read(srcImageFilePath);
+  img.read(srcImageFilePath.c_str());
   string exifStr = img.attribute(exiftag);
   //cout << "exif = [" << exifStr << "]"<<endl;
 
@@ -95,13 +92,13 @@ extern "C" mrb_value mrb_mrmagick_get_exif_by_entry(mrb_state *mrb, mrb_value se
 
 static void writeAndBlob(Image *img, mrb_state *mrb, mrb_value obj)
 {
-  char srcImageFilePath[512], buf[256];
+  string srcImageFilePath;
 
-  getSrcImageFilePath(mrb, obj, srcImageFilePath);
+  getSrcImageFilePath(mrb, obj, &srcImageFilePath);
 
   //cout << "srcImageFilePath=["<<srcImageFilePath<<"]"<<endl;
 
-  img->read(srcImageFilePath);
+  img->read(srcImageFilePath.c_str());
 
   mrb_value ov = mrb_iv_get(mrb, obj, mrb_intern_lit(mrb, "@orientationv"));
   if (mrb_fixnum_p(ov)) {
@@ -205,9 +202,8 @@ static void writeAndBlob(Image *img, mrb_state *mrb, mrb_value obj)
     if (mrb_bool(v)) {
       // Mrmagick::Capi.scale(params[1], params[4], params[3])
       v = mrb_ary_ref( mrb, params, 3);
-      strncpy(buf, RSTRING_PTR(v), RSTRING_LEN(v));
-      buf[RSTRING_LEN(v)] = '\0';
-      img->scale(buf);
+      string scalestr(RSTRING_PTR(v), RSTRING_LEN(v));
+      img->scale(scalestr.c_str());
     }
     //elsif c.include?("-blur") then
     v = mrb_funcall(mrb, c, "include?", 1, mrb_str_new_cstr(mrb, "-blur"));
@@ -259,7 +255,6 @@ static void writeAndBlob(Image *img, mrb_state *mrb, mrb_value obj)
 }
 extern "C" mrb_value mrb_mrmagick_write(mrb_state *mrb, mrb_value self)
 {
-  char distImageFilePath[512];
   Image img;
 
   mrb_value obj;
@@ -268,13 +263,11 @@ extern "C" mrb_value mrb_mrmagick_write(mrb_state *mrb, mrb_value self)
   //mrb_funcall(mrb,mrb_top_self(mrb), "p", 1, obj);
 
   mrb_value val = mrb_iv_get(mrb, obj, mrb_intern_lit(mrb, "@outpath"));
-  strncpy(distImageFilePath, RSTRING_PTR( val ), RSTRING_LEN( val ));
-  distImageFilePath[RSTRING_LEN( val )] = '\0';
-  //cout << "distImageFilePath=["<<distImageFilePath<<"]"<<endl;
+  string distImageFilePath(RSTRING_PTR( val ), RSTRING_LEN( val ));
 
   writeAndBlob(&img, mrb, obj);
 
-  img.write(distImageFilePath);
+  img.write(distImageFilePath.c_str());
   /*
      else
       rtn = `#{c}`
