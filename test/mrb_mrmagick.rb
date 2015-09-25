@@ -6,7 +6,7 @@ def setupTestImage
 end
 
 def tearDownTestImage
-  `rm -f t.png dest.png diff.png output.png`
+  `rm -f t.png dest.png dest*.gif diff.png output.png`
 end
 
 assert("Mrmagick::Image#scale") do
@@ -35,7 +35,7 @@ assert("Mrmagick::Image#rotate") do
   setupTestImage
   Mrmagick::ImageList.new("output.png").rotate(30).write("t.png")
   `convert -rotate 30 output.png dest.png`
-  `composite -compose difference dest.png t.png diff.png`
+  `composite -compose difference dest*.png t.png diff.png`
   t= `identify -format "%[mean]" diff.png`
   t.gsub!("\n","")
   assert_equal("0",t)
@@ -91,6 +91,33 @@ assert("Mrmagick::Image#auto_orient") do
   t.write("t.jpg")
   t = Mrmagick::ImageList.new("t.jpg")
   assert_equal("1",t.orientation)
+  tearDownTestImage
+end
+
+assert("Mrmagick::Image#auto_orient") do
+  setupTestImage
+  o = Mrmagick::ImageList.new("output.png")
+  o2 = o.rotate(180)
+  o3 = o.blur_image(1.0,8.0)
+  o.push o2
+  o.push o3
+  o.write("dest.gif")
+  `convert +adjoin dest.gif dest.gif`
+  `convert output.png dest.gif`
+  `composite -compose difference dest-0.gif dest.gif diff.png`
+  t= `identify -format "%[mean]" diff.png`
+  t.gsub!("\n","")
+  assert_equal("0",t)
+  `convert -rotate 180 output.png dest.gif`
+  `composite -compose difference dest-1.gif dest.gif diff.png`
+  t= `identify -format "%[mean]" diff.png`
+  t.gsub!("\n","")
+  assert_equal("0",t)
+  `convert -blur 1.0x8.0 output.png dest.gif`
+  `composite -compose difference dest-2.gif dest.gif diff.png`
+  t= `identify -format "%[mean]" diff.png`
+  t.gsub!("\n","")
+  assert_equal("0",t)
   tearDownTestImage
 end
 
