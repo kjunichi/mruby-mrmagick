@@ -94,7 +94,7 @@ assert("Mrmagick::Image#auto_orient") do
   tearDownTestImage
 end
 
-assert("Mrmagick::Image#auto_orient") do
+assert("Mrmagick::Image#write") do
   setupTestImage
   o = Mrmagick::ImageList.new("output.png")
   o2 = o.rotate(180)
