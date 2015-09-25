@@ -178,7 +178,9 @@ module Mrmagick
     end
   end
   class ImageList
+
     def initialize
+      p "ImageList.initialize!"
     end
 
     def initialize(imagePath)
@@ -198,6 +200,7 @@ module Mrmagick
       @image = Mrmagick::Image.new(imagePath)
       @image.setParentPath(imagePath)
       @cmd = ''
+      @frames = []
     end
 
     def get_exif_by_entry(key)
@@ -250,7 +253,23 @@ module Mrmagick
     end
 
     def write(path)
-      @image.write(path)
+      if path.split(".")[-1] == "gif"
+        #p @frames.length
+        if @frames.length>0
+          # 複数のImageからblobを取り出し、これをgifとして保存する。
+          blobs = []
+          blobs.push(@image.to_blob)
+          @frames.each {|imglist|
+            blobs.push(imglist.to_blob)
+          }
+          #p blobs.length
+          Mrmagick::Capi.write_gif(path, blobs)
+        else
+          @image.write(path)
+        end
+      else
+        @image.write(path)
+      end
     end
 
     def to_blob
@@ -345,6 +364,14 @@ module Mrmagick
       destImage.magickCommand("convert #{srcImagePath} -rotate 270 #{destImage.getPath}")
       destImage.magickCommand2("convert #{srcImagePath} -flop #{destImage.getPath}")
       destImage
+    end
+
+    def getImage
+      @image
+    end
+
+    def push(images)
+      @frames.push(images)
     end
 
     def self.bye

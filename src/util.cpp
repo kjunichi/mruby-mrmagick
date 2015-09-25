@@ -95,8 +95,7 @@ static void writeAndBlob(Image *img, mrb_state *mrb, mrb_value obj)
   string srcImageFilePath;
 
   getSrcImageFilePath(mrb, obj, &srcImageFilePath);
-
-  //cout << "srcImageFilePath=["<<srcImageFilePath<<"]"<<endl;
+  //cout << "srcImageFilePath=[" << srcImageFilePath << "]" << endl;
 
   img->read(srcImageFilePath.c_str());
 
@@ -184,6 +183,7 @@ static void writeAndBlob(Image *img, mrb_state *mrb, mrb_value obj)
   if (mrb_nil_p(val)) {
     return;
   }
+  //mrb_funcall(mrb, mrb_top_self(mrb), "p", 1, val);
   int lastIdx = RARRAY_LEN(val) - 1;
   cout << "lastIdx = " << lastIdx << endl;
   int idx = 0;
@@ -192,7 +192,7 @@ static void writeAndBlob(Image *img, mrb_state *mrb, mrb_value obj)
   int num_cmds = RARRAY_LEN(val);
   for (int i = 0; i < num_cmds; ++i) {
     mrb_value c = mrb_ary_ref(mrb, val, i);
-    //mrb_funcall(mrb,mrb_top_self(mrb), "p", 1, c);
+    //mrb_funcall(mrb, mrb_top_self(mrb), "p", 1, c);
     //params = c.split(" ")
     mrb_value params = mrb_funcall(mrb, c, "split", 1, mrb_str_new_cstr(mrb, " "));
     //mrb_funcall(mrb,mrb_top_self(mrb), "p", 1, params);
@@ -234,7 +234,7 @@ static void writeAndBlob(Image *img, mrb_state *mrb, mrb_value obj)
     if (mrb_bool(v)) {
       //cout<<"-rotate"<<endl;
       v = mrb_ary_ref( mrb, params, 3);
-      //mrb_funcall(mrb,mrb_top_self(mrb), "p", 1, v);
+      //mrb_funcall(mrb, mrb_top_self(mrb), "p", 1, v);
       v = mrb_funcall(mrb, v, "to_f", 0);
       float rot = mrb_float(v);
       //cout << "rot = " <<rot<<endl;
@@ -252,6 +252,7 @@ static void writeAndBlob(Image *img, mrb_state *mrb, mrb_value obj)
     }
     ++idx;
   }
+  //cout << "writeAndBlob: end" << endl;
 }
 extern "C" mrb_value mrb_mrmagick_write(mrb_state *mrb, mrb_value self)
 {
@@ -278,18 +279,54 @@ extern "C" mrb_value mrb_mrmagick_write(mrb_state *mrb, mrb_value self)
   return mrb_nil_value();
 }
 
+/**
+ファイルパスとBlobの配列を受け取り、gif animationとして書き出す
+*/
+extern "C" mrb_value mrb_mrmagick_write_gif(mrb_state *mrb, mrb_value self)
+{
+  mrb_value obj;
+  char *path = NULL;
+
+  // get gif file name to write.
+  mrb_get_args(mrb, "zo", &path, &obj);
+  //cout << "path = " << path << endl;
+  //mrb_funcall(mrb, mrb_top_self(mrb), "p", 1, obj);
+
+  if (mrb_array_p(obj)) {
+    //mrb_value val = mrb_funcall(mrb, obj, "length", 0, mrb_nil_value());
+    //mrb_funcall(mrb,mrb_top_self(mrb), "p", 1, val);
+
+    list<Image> ilist;
+
+    int len = RARRAY_LEN(obj);
+    for (int i = 0; i < len; i++) {
+      Blob blob(RSTRING_PTR(mrb_ary_ref(mrb, obj, i)), RSTRING_LEN(mrb_ary_ref(mrb, obj, i)));
+      Image img(blob);
+      img.animationDelay(10);
+      img.animationIterations(0);
+      ilist.push_back(img);
+    }
+    Image appended;
+    writeImages(ilist.begin(), ilist.end(), path);
+    //appendImages(&appended, ilist.begin(), ilist.end());
+    //appended.write(path);
+  }
+  return mrb_nil_value();
+}
+
 extern "C" mrb_value mrb_mrmagick_to_blob(mrb_state *mrb, mrb_value self)
 {
   mrb_value obj;
 
   mrb_get_args(mrb, "o", &obj);
-  //mrb_funcall(mrb,mrb_top_self(mrb), "p", 1, obj);
+  mrb_funcall(mrb, mrb_top_self(mrb), "p", 1, obj);
 
   Image img;
   writeAndBlob(&img, mrb, obj);
 
   Blob blob;
   img.write(&blob);
+  cout << "done img#write(Blob)" << endl;
   mrb_value val;
   val = mrb_str_new(mrb, (const char*)blob.data(), blob.length());
   return val;
