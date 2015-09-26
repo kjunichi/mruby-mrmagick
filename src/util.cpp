@@ -119,7 +119,7 @@ static void writeAndBlob(Image *img, mrb_state *mrb, mrb_value obj)
         }*/
 
     int orientation = mrb_fixnum(ov);
-    cout << "orientation = " << mrb_fixnum(ov) << endl;
+    //cout << "orientation = " << mrb_fixnum(ov) << endl;
     switch (orientation) {
     case 1:
       img->orientation(TopLeftOrientation);
@@ -184,8 +184,8 @@ static void writeAndBlob(Image *img, mrb_state *mrb, mrb_value obj)
     return;
   }
   //mrb_funcall(mrb, mrb_top_self(mrb), "p", 1, val);
-  int lastIdx = RARRAY_LEN(val) - 1;
-  cout << "lastIdx = " << lastIdx << endl;
+  //int lastIdx = RARRAY_LEN(val) - 1;
+  //cout << "lastIdx = " << lastIdx << endl;
   int idx = 0;
 
   //for c in @cmd do
@@ -319,14 +319,14 @@ extern "C" mrb_value mrb_mrmagick_to_blob(mrb_state *mrb, mrb_value self)
   mrb_value obj;
 
   mrb_get_args(mrb, "o", &obj);
-  mrb_funcall(mrb, mrb_top_self(mrb), "p", 1, obj);
+  //mrb_funcall(mrb, mrb_top_self(mrb), "p", 1, obj);
 
   Image img;
   writeAndBlob(&img, mrb, obj);
 
   Blob blob;
   img.write(&blob);
-  cout << "done img#write(Blob)" << endl;
+  //cout << "done img#write(Blob)" << endl;
   mrb_value val;
   val = mrb_str_new(mrb, (const char*)blob.data(), blob.length());
   return val;

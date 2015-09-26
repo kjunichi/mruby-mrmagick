@@ -37,7 +37,7 @@ module Mrmagick
         @cmd = [cmd]
       else
         @cmd.push(cmd)
-        p self
+        #p self
       end
     end
 
@@ -52,48 +52,6 @@ module Mrmagick
     def write(path)
       @outpath = path
       Mrmagick::Capi.write(self)
-    end
-
-    def write_old(path)
-      if @cmd.nil?
-      # からのファイルを作る？
-      # puts @origImagePath
-      else
-        # これまでのコマンドを実行する。
-        lastIdx = @cmd.size - 1
-        idx = 0
-        # 削除ファイルリスト
-        delTmpFiles = []
-        for c in @cmd do
-          if idx == lastIdx
-            p idx
-            p @origImagePath, path
-            c.gsub!(@origImagePath, path)
-          end
-          puts c
-          params = c.split(' ')
-          if idx < lastIdx && lastIdx > 0
-            # 複数処理する場合、中間ファイルは削除対象にする。
-            delTmpFiles.push(params[4])
-          end
-          if c.include?('-resize')
-            Mrmagick::Capi.scale(params[1], params[4], params[3])
-          elsif c.include?('-blur')
-            radius_sigma = params[3].split(',')
-            if radius_sigma.length < 2
-              sigma = 0.5
-            else
-              sigma = radius_sigma[1].to_f
-            end
-            # p radius_sigma[0],sigma
-            Mrmagick::Capi.blur(params[1], params[4], radius_sigma[0].to_f, sigma)
-          else
-            rtn = `#{c}`
-          end
-          idx += 1
-        end
-        Mrmagick::Capi.rm(delTmpFiles) if delTmpFiles.size > 0
-      end
     end
 
     def rotate(rot)
