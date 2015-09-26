@@ -120,7 +120,3 @@ assert("Mrmagick::Image#write") do
   assert_equal("0",t)
   tearDownTestImage
 end
-
-assert("Mrmagick::ImageList#bye") do
-  assert_equal("bye", Mrmagick::ImageList.bye)
-end

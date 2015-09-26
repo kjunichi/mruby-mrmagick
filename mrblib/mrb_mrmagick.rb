@@ -374,10 +374,6 @@ module Mrmagick
       @frames.push(images)
     end
 
-    def self.bye
-      # self.hello + " bye"
-      'bye'
-    end
   end
   class Draw
   end
