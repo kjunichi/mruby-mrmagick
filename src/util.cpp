@@ -331,3 +331,58 @@ extern "C" mrb_value mrb_mrmagick_to_blob(mrb_state *mrb, mrb_value self)
   val = mrb_str_new(mrb, (const char*)blob.data(), blob.length());
   return val;
 }
+
+/*
+ * Return width of the image.
+ */
+extern "C" mrb_value mrb_mrmagick_get_columns(mrb_state *mrb, mrb_value self)
+{
+  //mrb_funcall(mrb, mrb_top_self(mrb), "p", 1, self);
+  mrb_value obj;
+  mrb_get_args(mrb, "o", &obj);
+
+  Image img;
+  writeAndBlob(&img, mrb, obj);
+  Blob blob;
+  img.write(&blob);
+  //cout << img.columns() << endl;
+  return mrb_fixnum_value((int)img.columns());
+}
+
+/*
+ * Return height of the image.
+ *
+ * @param [Image] image.
+ */
+extern "C" mrb_value mrb_mrmagick_get_rows(mrb_state *mrb, mrb_value self)
+{
+  //mrb_funcall(mrb, mrb_top_self(mrb), "p", 1, self);
+  mrb_value obj;
+  mrb_get_args(mrb, "o", &obj);
+
+  Image img;
+  writeAndBlob(&img, mrb, obj);
+  Blob blob;
+  img.write(&blob);
+  //cout << img.columns() << endl;
+  return mrb_fixnum_value((int)img.rows());
+}
+
+/*
+ * Return format of the image.
+ *
+ * @param [Image] image.
+ */
+extern "C" mrb_value mrb_mrmagick_get_format(mrb_state *mrb, mrb_value self)
+{
+  //mrb_funcall(mrb, mrb_top_self(mrb), "p", 1, self);
+  mrb_value obj;
+  mrb_get_args(mrb, "o", &obj);
+
+  Image img;
+  writeAndBlob(&img, mrb, obj);
+  Blob blob;
+  img.write(&blob);
+  string format = img.format();
+  return mrb_str_new(mrb, format.c_str(), format.length());
+}

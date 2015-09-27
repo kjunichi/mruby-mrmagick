@@ -6,13 +6,34 @@ module Mrmagick
   class Image
     def initialize(path)
       @origImagePath = path
-      @exif={}
-      #p @origImagePath
+      @exif = {}
+      # p @origImagePath
       # return self
     end
 
     def setParentPath(path)
       @parentPath = path
+    end
+
+    # Get width of the image.
+    #
+    # @return [Integer] width of the image.
+    def columns
+      Mrmagick::Capi.get_columns(self)
+    end
+
+    # Get height of the image.
+    #
+    # @return [Integer] height of the image.
+    def rows
+      Mrmagick::Capi.get_rows(self)
+    end
+
+    # Get format of the image.
+    #
+    # @return [String] format of the image.
+    def format
+      Mrmagick::Capi.get_format(self)
     end
 
     def get_exif_by_entry(key)
@@ -37,7 +58,7 @@ module Mrmagick
         @cmd = [cmd]
       else
         @cmd.push(cmd)
-        #p self
+        # p self
       end
     end
 
@@ -55,23 +76,23 @@ module Mrmagick
     end
 
     def rotate(rot)
-      destImage = ImageList::createVirtualImageList
+      destImage = ImageList.createVirtualImageList
       srcImagePath = gen
-      #p srcImagePath
+      # p srcImagePath
       destImage.magickCommand("convert #{srcImagePath} -rotate #{rot} #{destImage.getPath}")
       destImage
     end
 
     def flop
-      destImage = ImageList::createVirtualImageList
+      destImage = ImageList.createVirtualImageList
       srcImagePath = gen
       destImage.magickCommand("convert #{srcImagePath} -flop #{destImage.getPath}")
       destImage
     end
 
     def flip
-      #p "flip"
-      destImage = ImageList::createVirtualImageList
+      # p "flip"
+      destImage = ImageList.createVirtualImageList
       srcImagePath = gen
       destImage.magickCommand("convert #{srcImagePath} -flip #{destImage.getPath}")
       destImage
@@ -98,31 +119,31 @@ module Mrmagick
     end
 
     def orientation
-      @exifKey = "Orientation"
+      @exifKey = 'Orientation'
       orient = Mrmagick::Capi.get_exif_by_entry(self)
     end
 
     def auto_orient
-      orient = self.orientation
+      orient = orientation
       case orient
-      when "2" then
-        destImage = self.flop
-      when "3" then
-        destImage = self.rotate(180)
-      when "4" then
-        destImage = self.flip
-      when "5" then
-        destImage = self.transpose
-      when "6" then
-        destImage = self.rotate(90)
-      when "7" then
-        destImage = self.transverse
-      when "8" then
-        destImage = self.roteate(270)
+      when '2' then
+        destImage = flop
+      when '3' then
+        destImage = rotate(180)
+      when '4' then
+        destImage = flip
+      when '5' then
+        destImage = transpose
+      when '6' then
+        destImage = rotate(90)
+      when '7' then
+        destImage = transverse
+      when '8' then
+        destImage = roteate(270)
       else
-        destImage = self.rotate(0)
+        destImage = rotate(0)
       end
-      destImage.orientation=1
+      destImage.orientation = 1
       destImage
     end
 
@@ -136,9 +157,8 @@ module Mrmagick
     end
   end
   class ImageList
-
     def initialize
-      p "ImageList.initialize!"
+      p 'ImageList.initialize!'
     end
 
     def initialize(imagePath)
@@ -170,7 +190,7 @@ module Mrmagick
     end
 
     def orientation=(v)
-        @image.orientation = v
+      @image.orientation = v
     end
 
     def orientation
@@ -180,24 +200,24 @@ module Mrmagick
     def auto_orient
       orient = orientation
       case orient
-      when "2" then
-        destImage = self.flop()
-      when "3" then
-        destImage = self.rotate(180)
-      when "4" then
-        destImage = self.flip()
-      when "5" then
-        destImage = self.transpose()
-      when "6" then
-        destImage = self.rotate(90)
-      when "7" then
-        destImage = self.transverse()
-      when "8" then
-        destImage = self.rotate(270)
+      when '2' then
+        destImage = flop
+      when '3' then
+        destImage = rotate(180)
+      when '4' then
+        destImage = flip
+      when '5' then
+        destImage = transpose
+      when '6' then
+        destImage = rotate(90)
+      when '7' then
+        destImage = transverse
+      when '8' then
+        destImage = rotate(270)
       else
-        destImage = self.rotate(0)
+        destImage = rotate(0)
       end
-      destImage.orientation=1
+      destImage.orientation = 1
       destImage
     end
 
@@ -211,16 +231,16 @@ module Mrmagick
     end
 
     def write(path)
-      if path.split(".")[-1] == "gif"
-        #p @frames.length
-        if @frames.length>0
+      if path.split('.')[-1] == 'gif'
+        # p @frames.length
+        if @frames.length > 0
           # 複数のImageからblobを取り出し、これをgifとして保存する。
           blobs = []
           blobs.push(@image.to_blob)
-          @frames.each {|imglist|
+          @frames.each do|imglist|
             blobs.push(imglist.to_blob)
-          }
-          #p blobs.length
+          end
+          # p blobs.length
           Mrmagick::Capi.write_gif(path, blobs)
         else
           @image.write(path)
@@ -239,10 +259,10 @@ module Mrmagick
     end
 
     def magickCommand(cmd)
-      #puts "magickCommand: " + cmd
+      # puts "magickCommand: " + cmd
 
       @images.each do|savedCmd|
-        #puts "savedCmd: " + savedCmd
+        # puts "savedCmd: " + savedCmd
         @image.magickCommand(savedCmd)
       end
       @image.magickCommand(cmd)
@@ -250,7 +270,7 @@ module Mrmagick
     end
 
     def magickCommand2(cmd)
-      #puts "magickCommand2: " + cmd
+      # puts "magickCommand2: " + cmd
       @image.magickCommand(cmd)
       @images.push(cmd)
     end
@@ -324,6 +344,27 @@ module Mrmagick
       destImage
     end
 
+    # Get width of the image.
+    #
+    # @return [Integer] width of the image.
+    def columns
+      @image.columns
+    end
+
+    # Get height of the image.
+    #
+    # @return [Integer] height of the image.
+    def rows
+      @image.rows
+    end
+
+    # Get format of the image.
+    #
+    # @return [String] format of the image.
+    def format
+      @image.format
+    end
+
     def getImage
       @image
     end
@@ -331,7 +372,6 @@ module Mrmagick
     def push(images)
       @frames.push(images)
     end
-
   end
   class Draw
   end

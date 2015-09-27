@@ -120,3 +120,27 @@ assert("Mrmagick::Image#write") do
   assert_equal("0",t)
   tearDownTestImage
 end
+
+assert("Mrmagick::Image#columns") do
+  setupTestImage
+  o = Mrmagick::ImageList.new("output.png")
+  assert_equal(640,o.columns)
+  tearDownTestImage
+end
+
+assert("Mrmagick::Image#columns") do
+  setupTestImage
+  o = Mrmagick::ImageList.new("output.png")
+  assert_equal(480,o.rows)
+  tearDownTestImage
+end
+
+assert("Mrmagick::Image#format") do
+  setupTestImage
+  o = Mrmagick::ImageList.new("output.png")
+  assert_equal("Portable Network Graphics",o.format)
+  o.write("dest.gif")
+  o = Mrmagick::ImageList.new("dest.gif")
+  assert_equal("CompuServe graphics interchange format",o.format)
+  tearDownTestImage
+end

@@ -25,6 +25,9 @@ extern mrb_value mrb_mrmagick_write_gif(mrb_state *mrb, mrb_value self);
 extern mrb_value mrb_mrmagick_get_exif_by_entry(mrb_state *mrb, mrb_value self);
 extern mrb_value mrb_mrmagick_to_blob(mrb_state *mrb, mrb_value self);
 extern mrb_value mrb_mrmagick_from_blob(mrb_state *mrb, mrb_value self);
+extern mrb_value mrb_mrmagick_get_columns(mrb_state *mrb, mrb_value self);
+extern mrb_value mrb_mrmagick_get_rows(mrb_state *mrb, mrb_value self);
+extern mrb_value mrb_mrmagick_get_format(mrb_state *mrb, mrb_value self);
 
 #define DONE mrb_gc_arena_restore(mrb, 0);
 
@@ -115,6 +118,9 @@ void mrb_mruby_mrmagick_gem_init(mrb_state *mrb)
   mrb_define_class_method(mrb, mrmagick, "to_blob", mrb_mrmagick_to_blob, MRB_ARGS_REQ(1));
   mrb_define_class_method(mrb, mrmagick, "from_blob", mrb_mrmagick_to_blob, MRB_ARGS_REQ(2));
   mrb_define_class_method(mrb, mrmagick, "get_exif_by_entry", mrb_mrmagick_get_exif_by_entry, MRB_ARGS_REQ(1));
+  mrb_define_class_method(mrb, mrmagick, "get_columns", mrb_mrmagick_get_columns, MRB_ARGS_REQ(1));
+  mrb_define_class_method(mrb, mrmagick, "get_rows", mrb_mrmagick_get_rows, MRB_ARGS_REQ(1));
+  mrb_define_class_method(mrb, mrmagick, "get_format", mrb_mrmagick_get_format, MRB_ARGS_REQ(1));
   DONE;
 }
 
