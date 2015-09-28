@@ -250,6 +250,21 @@ static void writeAndBlob(Image *img, mrb_state *mrb, mrb_value obj)
       //cout<<"-flip"<<endl;
       img->flip();
     }
+    v = mrb_funcall(mrb, c, "include?", 1, mrb_str_new_cstr(mrb, "-crop"));
+    if (mrb_bool(v)) {
+      v = mrb_ary_ref( mrb, params, 3);
+      //mrb_funcall(mrb, mrb_top_self(mrb), "p", 1, v);
+      Geometry geom(string(RSTRING_PTR(v), RSTRING_LEN(v)));
+      /*
+      cout << "geom.width,height = "<<geom.width() <<", "<< geom.height() << endl;
+      cout << "geom.offset = "<<geom.xOff() <<", "<< geom.yOff() << endl;
+      cout << "geom.isValid "<<geom.isValid() << endl;
+      cout << "geom.aspect "<<geom.aspect() << endl;
+      */
+      geom.aspect(false);
+      //cout << "geom.aspect "<<geom.aspect() << endl;
+      img->crop(geom);
+    }
     ++idx;
   }
   //cout << "writeAndBlob: end" << endl;
