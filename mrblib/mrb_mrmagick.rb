@@ -36,6 +36,20 @@ module Mrmagick
       Mrmagick::Capi.get_format(self)
     end
 
+    # Crop the image.
+    #
+    # @param [Integer] offset_x offset x.
+    # @param [Integer] offset_y offset y.
+    # @param [Integer] width width.
+    # @param [Integer] height height.
+    # @return [Image] cropped image.
+    def crop(offset_x, offset_y, width, height)
+      destImage = ImageList.createVirtualImageList
+      srcImagePath = gen
+      destImage.magickCommand("convert #{srcImagePath} -crop #{width}x#{height}+#{offset_x}+#{offset_y} #{destImage.getPath}")
+      destImage
+    end
+
     def get_exif_by_entry(key)
       @exifKey = key
       Mrmagick::Capi.get_exif_by_entry(self)
@@ -341,6 +355,33 @@ module Mrmagick
       srcImagePath = @image.gen
       destImage.magickCommand("convert #{srcImagePath} -rotate 270 #{destImage.getPath}")
       destImage.magickCommand2("convert #{srcImagePath} -flop #{destImage.getPath}")
+      destImage
+    end
+
+    # Crop the image.
+    #
+    # @param [Integer] offset_x offset x.
+    # @param [Integer] offset_y offset y.
+    # @param [Integer] width width.
+    # @param [Integer] height height.
+    # @return [Image] cropped image.
+    def crop(offset_x, offset_y, width, height)
+      destImage = createVirtualImageList
+      srcImagePath = @image.gen
+      if offset_x>0
+        xOffSgnStr = "+"
+      else
+        xOffSgnStr = "-"
+        offset_x = - offset_x
+      end
+
+      if offset_y>0
+        yOffSgnStr = "+"
+      else
+        yOffSgnStr = "-"
+        offset_y = - offset_y
+      end
+      destImage.magickCommand("convert #{srcImagePath} -crop #{width}x#{height}"+xOffSgnStr+"#{offset_x}"+yOffSgnStr+"#{offset_y}! #{destImage.getPath}")
       destImage
     end
 

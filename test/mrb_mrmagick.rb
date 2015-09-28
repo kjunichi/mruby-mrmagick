@@ -144,3 +144,14 @@ assert("Mrmagick::Image#format") do
   assert_equal("CompuServe graphics interchange format",o.format)
   tearDownTestImage
 end
+
+assert("Mrmagick::Image#crop") do
+  setupTestImage
+  Mrmagick::ImageList.new("output.png").crop(8,16,256,384).write("t.png")
+  `convert -crop 256x384+8+16! output.png dest.png`
+  `composite -compose difference dest.png t.png diff.png`
+  t= `identify -format "%[mean]" diff.png`
+  t.gsub!("\n","")
+  assert_equal("0",t)
+  tearDownTestImage
+end
