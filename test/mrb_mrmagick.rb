@@ -89,6 +89,8 @@ assert("Mrmagick::Image#auto_orient") do
   t = Mrmagick::ImageList.new("t.jpg")
   t=t.auto_orient
   t.write("t.jpg")
+  t2 = t.rotate(123)
+  assert_equal("1",t2.orientation)
   t = Mrmagick::ImageList.new("t.jpg")
   assert_equal("1",t.orientation)
   tearDownTestImage
