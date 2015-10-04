@@ -64,6 +64,26 @@ module Mrmagick
       @images.flatten!
     end
 
+    # Chcek cached Orientation
+    #
+    # @return [Boolean] has orientation.
+    def hasCachedOrientation
+      if @exif["Orientation"]==nil
+        return false
+      end
+      return true
+    end
+
+    # Set parent orientation
+    #
+    # @param [Image] parent image.
+    def setParentOrientation(img)
+      if img.hasCachedOrientation
+        @orientationv = img.orientation.to_i
+        @exif["Orientation"]=img.orientation
+      end
+    end
+
     def magickCommand(cmd)
       if @cmd.nil?
         # １番目のコマンドのソースパスを親のパス(実体のある画像ファイル)と仮定。
@@ -129,12 +149,19 @@ module Mrmagick
     end
 
     def orientation=(v)
+      @exif["Orientation"] = v.to_s
       @orientationv = v
     end
 
     def orientation
       @exifKey = 'Orientation'
+      if(@exif[@exifKey]!=nil && @exif[@exifKey]!="")
+        return @exif[@exifKey]
+      end
+      #p "get real orientation!"
       orient = Mrmagick::Capi.get_exif_by_entry(self)
+      @exif[@exifKey]=orient
+      orient
     end
 
     def auto_orient
@@ -231,6 +258,7 @@ module Mrmagick
       else
         destImage = rotate(0)
       end
+      #p "ImageList.auto_orient set "
       destImage.orientation = 1
       destImage
     end
@@ -238,6 +266,13 @@ module Mrmagick
     def setParentImages(images)
       @images.push(images)
       @images.flatten!
+    end
+
+    # Set parent orientation
+    #
+    # @param [Image] parent image.
+    def setParentOrientation(img)
+      @image.setParentOrientation(img)
     end
 
     def getPath
@@ -292,6 +327,7 @@ module Mrmagick
     def createVirtualImageList
       destImage = ImageList.new ''
       destImage.setParentImages(@images)
+      destImage.setParentOrientation(@image)
       destImage
     end
 

@@ -69,7 +69,7 @@ extern "C" mrb_value mrb_mrmagick_get_exif_by_entry(mrb_state *mrb, mrb_value se
   //cout << "srcImageFilePath = [" << srcImageFilePath << "]"<<endl;
   img.read(srcImageFilePath.c_str());
   string exifStr = img.attribute(exiftag);
-  //cout << "exif = [" << exifStr << "]"<<endl;
+  //cout << "exif["+exiftag+"] = " << exifStr <<endl;
 
   //exifStr = img.attribute("EXIF:FNumber");
   //cout << "exif = [" << exifStr << "]"<<endl;
