@@ -239,6 +239,7 @@ static void writeAndBlob(Image *img, mrb_state *mrb, mrb_value obj)
       float rot = mrb_float(v);
       //cout << "rot = " <<rot<<endl;
       img->rotate((double)rot);
+      img->page("0x0+0+0");
     }
     v = mrb_funcall(mrb, c, "include?", 1, mrb_str_new_cstr(mrb, "-flop"));
     if (mrb_bool(v)) {
@@ -264,6 +265,7 @@ static void writeAndBlob(Image *img, mrb_state *mrb, mrb_value obj)
       geom.aspect(false);
       //cout << "geom.aspect "<<geom.aspect() << endl;
       img->crop(geom);
+      img->page("0x0+0+0");
     }
     ++idx;
   }
