@@ -1,6 +1,9 @@
 # mruby-mrmagick   [![Build Status](https://travis-ci.org/kjunichi/mruby-mrmagick.png?branch=master)](https://travis-ci.org/kjunichi/mruby-mrmagick)
-Mrmagick class
+
+ImageMagick binding for mruby.
+
 ## install by mrbgems
+
 - add conf.gem line to `build_config.rb`
 
 ```ruby
@@ -11,6 +14,7 @@ MRuby::Build.new do |conf|
     conf.gem :github => 'kjunichi/mruby-mrmagick'
 end
 ```
+
 ## example
 
 ```ruby
