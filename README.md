@@ -14,7 +14,7 @@ MRuby::Build.new do |conf|
 
     # ... (snip) ...
 
-    conf.gem :github => 'kjunichi/mruby-mrmagick'
+    conf.gem :mgem => 'mruby-mrmagick'
 end
 ```
 
