@@ -2,6 +2,9 @@
 
 ImageMagick binding for mruby.
 
+I don't know or use the whole ImageMagick library.
+I have deliberately let some modules out of these bindings in order to focus on parts I understand and/or have a need for.
+
 ## install by mrbgems
 
 - add conf.gem line to `build_config.rb`
