@@ -1,5 +1,5 @@
 name: mruby-mrmagick
-description: Mrmagick class
+description: ImageMagick binding for mruby.
 author: Junichi Kajiwara
 website: https://github.com/kjunichi/mruby-mrmagick
 protocol: git
