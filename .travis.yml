@@ -17,11 +17,10 @@ before_script:
   - make
   - sudo make install
   - cd ..
-  - git clone https://github.com/ImageMagick/ImageMagick
+  - git clone -b ImageMagick-6 --depth 1 https://github.com/ImageMagick/ImageMagick.git
   - cd ImageMagick
-  - git checkout ImageMagick-6
-  - ./configure --prefix=/usr
-  - make -j4
+  - ./configure --prefix=/usr --without-xml --without-perl --disable-docs
+  - make -j -l 4
   - which clang
   - sudo PATH=/usr/local/clang-3.4/bin:$PATH make install
   - cd ..
