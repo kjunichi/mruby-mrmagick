@@ -7,7 +7,6 @@
 */
 #include <stdio.h>
 #include <string.h>
-// #include <uuid.h>
 
 #include "mruby.h"
 #include "mruby/array.h"
@@ -106,7 +105,6 @@ mrb_mrmagick_rm(mrb_state *mrb, mrb_value self)
   printf("delete Files %d\n", num_files);
   for (i = 0; i < num_files; ++i) {
     val = mrb_ary_ref(mrb, ary, i);
-    // mrb_funcall(mrb, mrb_top_self(mrb), "p", 1, val);
     strncpy(filepath, RSTRING_PTR(val), RSTRING_LEN(val));
     filepath[RSTRING_LEN(val)] = '\0';
     printf("array[%d]=%s\n", i, filepath);
