@@ -45,8 +45,7 @@ scale(const char *srcPath, const char *destPath, const char *ratio)
 }
 
 extern "C" void
-blur(const char *srcPath, const char *destPath, const double radius,
-     const double sigma)
+blur(const char *srcPath, const char *destPath, const double radius, const double sigma)
 {
   myInitializeMagick();
   Image image;
@@ -199,13 +198,11 @@ writeAndBlob(Image *img, mrb_state *mrb, mrb_value obj)
     mrb_value c = mrb_ary_ref(mrb, val, i);
     // mrb_funcall(mrb, mrb_top_self(mrb), "p", 1, c);
     // params = c.split(" ")
-    mrb_value params =
-      mrb_funcall(mrb, c, "split", 1, mrb_str_new_cstr(mrb, " "));
+    mrb_value params = mrb_funcall(mrb, c, "split", 1, mrb_str_new_cstr(mrb, " "));
     // mrb_funcall(mrb,mrb_top_self(mrb), "p", 1, params);
 
     // if c.include?("-resize") then
-    mrb_value v =
-      mrb_funcall(mrb, c, "include?", 1, mrb_str_new_cstr(mrb, "-resize"));
+    mrb_value v = mrb_funcall(mrb, c, "include?", 1, mrb_str_new_cstr(mrb, "-resize"));
     if (mrb_bool(v)) {
       // Mrmagick::Capi.scale(params[1], params[4], params[3])
       v = mrb_ary_ref(mrb, params, 3);
@@ -217,8 +214,7 @@ writeAndBlob(Image *img, mrb_state *mrb, mrb_value obj)
     if (mrb_bool(v)) {
       // radius_sigma=params[3].split(",")
       mrb_value params_3 = mrb_ary_ref(mrb, params, 3);
-      mrb_value radius_sigma =
-        mrb_funcall(mrb, params_3, "split", 1, mrb_str_new_cstr(mrb, ","));
+      mrb_value radius_sigma = mrb_funcall(mrb, params_3, "split", 1, mrb_str_new_cstr(mrb, ","));
       // if radius_sigma.length<2 then
       //   sigma = 0.5
       // else
@@ -327,8 +323,7 @@ mrb_mrmagick_write_gif(mrb_state *mrb, mrb_value self)
 
     int len = RARRAY_LEN(obj);
     for (int i = 0; i < len; i++) {
-      Blob blob(RSTRING_PTR(mrb_ary_ref(mrb, obj, i)),
-                RSTRING_LEN(mrb_ary_ref(mrb, obj, i)));
+      Blob blob(RSTRING_PTR(mrb_ary_ref(mrb, obj, i)), RSTRING_LEN(mrb_ary_ref(mrb, obj, i)));
       Image img(blob);
       img.animationDelay(10);
       img.animationIterations(0);
