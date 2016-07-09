@@ -5,29 +5,37 @@
 **
 ** See Copyright Notice in LICENSE
 */
-#include <string.h>
 #include <stdio.h>
-// #include <uuid.h>
+#include <string.h>
 
 #include "mruby.h"
+#include "mruby/array.h"
 #include "mruby/data.h"
 #include "mruby/string.h"
-#include "mruby/array.h"
 #include "mrb_mrmagick.h"
 
-
-extern void myputs();
-extern void scale(const char *src_path, const char *dst_path, const char*ratio);
-extern void blur(const char *src_path, const char *dst_path,
-                 const double radius, const double sigma);
-extern mrb_value mrb_mrmagick_write(mrb_state *mrb, mrb_value self);
-extern mrb_value mrb_mrmagick_write_gif(mrb_state *mrb, mrb_value self);
-extern mrb_value mrb_mrmagick_get_exif_by_entry(mrb_state *mrb, mrb_value self);
-extern mrb_value mrb_mrmagick_to_blob(mrb_state *mrb, mrb_value self);
-extern mrb_value mrb_mrmagick_from_blob(mrb_state *mrb, mrb_value self);
-extern mrb_value mrb_mrmagick_get_columns(mrb_state *mrb, mrb_value self);
-extern mrb_value mrb_mrmagick_get_rows(mrb_state *mrb, mrb_value self);
-extern mrb_value mrb_mrmagick_get_format(mrb_state *mrb, mrb_value self);
+extern void
+myputs();
+extern void
+scale(const char *src_path, const char *dst_path, const char *ratio);
+extern void
+blur(const char *src_path, const char *dst_path, const double radius, const double sigma);
+extern mrb_value
+mrb_mrmagick_write(mrb_state *mrb, mrb_value self);
+extern mrb_value
+mrb_mrmagick_write_gif(mrb_state *mrb, mrb_value self);
+extern mrb_value
+mrb_mrmagick_get_exif_by_entry(mrb_state *mrb, mrb_value self);
+extern mrb_value
+mrb_mrmagick_to_blob(mrb_state *mrb, mrb_value self);
+extern mrb_value
+mrb_mrmagick_from_blob(mrb_state *mrb, mrb_value self);
+extern mrb_value
+mrb_mrmagick_get_columns(mrb_state *mrb, mrb_value self);
+extern mrb_value
+mrb_mrmagick_get_rows(mrb_state *mrb, mrb_value self);
+extern mrb_value
+mrb_mrmagick_get_format(mrb_state *mrb, mrb_value self);
 
 #define DONE mrb_gc_arena_restore(mrb, 0);
 
@@ -40,20 +48,21 @@ static const struct mrb_data_type mrb_mrmagick_data_type = {
   "mrb_mrmagick_data", mrb_free,
 };
 
-static mrb_value mrb_mrmagick_init(mrb_state *mrb, mrb_value self)
+static mrb_value
+mrb_mrmagick_init(mrb_state *mrb, mrb_value self)
 {
   mrb_mrmagick_data *data;
   char *str;
   int len;
 
-  data = (mrb_mrmagick_data*)DATA_PTR(self);
+  data = (mrb_mrmagick_data *)DATA_PTR(self);
   if (data)
     mrb_free(mrb, data);
   DATA_TYPE(self) = &mrb_mrmagick_data_type;
   DATA_PTR(self) = NULL;
 
   mrb_get_args(mrb, "s", &str, &len);
-  data = (mrb_mrmagick_data*)mrb_malloc(mrb, sizeof(mrb_mrmagick_data));
+  data = (mrb_mrmagick_data *)mrb_malloc(mrb, sizeof(mrb_mrmagick_data));
   data->str = str;
   data->len = len;
   DATA_PTR(self) = data;
@@ -61,7 +70,8 @@ static mrb_value mrb_mrmagick_init(mrb_state *mrb, mrb_value self)
   return self;
 }
 
-static mrb_value mrb_mrmagick_scale(mrb_state *mrb, mrb_value self)
+static mrb_value
+mrb_mrmagick_scale(mrb_state *mrb, mrb_value self)
 {
   char *src_path, *dst_path, *ratio;
 
@@ -70,7 +80,8 @@ static mrb_value mrb_mrmagick_scale(mrb_state *mrb, mrb_value self)
   return mrb_str_new_cstr(mrb, "hi!!");
 }
 
-static mrb_value mrb_mrmagick_blur(mrb_state *mrb, mrb_value self)
+static mrb_value
+mrb_mrmagick_blur(mrb_state *mrb, mrb_value self)
 {
   char *src_path, *dst_path;
   mrb_float radius, sigma;
@@ -80,19 +91,19 @@ static mrb_value mrb_mrmagick_blur(mrb_state *mrb, mrb_value self)
   return mrb_str_new_cstr(mrb, "hi!!");
 }
 
-static mrb_value mrb_mrmagick_rm(mrb_state *mrb, mrb_value self)
+static mrb_value
+mrb_mrmagick_rm(mrb_state *mrb, mrb_value self)
 {
   mrb_value ary, val;
 
-  int num_files;
+  int num_files, i;
   char filepath[1024];
 
   mrb_get_args(mrb, "A", &ary);
   num_files = RARRAY_LEN(ary);
   printf("delete Files %d\n", num_files);
-  for ( int i = 0; i < num_files; ++i ) {
+  for (i = 0; i < num_files; ++i) {
     val = mrb_ary_ref(mrb, ary, i);
-    //mrb_funcall(mrb, mrb_top_self(mrb), "p", 1, val);
     strncpy(filepath, RSTRING_PTR(val), RSTRING_LEN(val));
     filepath[RSTRING_LEN(val)] = '\0';
     printf("array[%d]=%s\n", i, filepath);
@@ -101,7 +112,8 @@ static mrb_value mrb_mrmagick_rm(mrb_state *mrb, mrb_value self)
   return mrb_str_new_cstr(mrb, "hi!!");
 }
 
-void mrb_mruby_mrmagick_gem_init(mrb_state *mrb)
+void
+mrb_mruby_mrmagick_gem_init(mrb_state *mrb)
 {
   struct RClass *mrmagick_module;
   struct RClass *mrmagick;
@@ -117,13 +129,15 @@ void mrb_mruby_mrmagick_gem_init(mrb_state *mrb)
   mrb_define_class_method(mrb, mrmagick, "write_gif", mrb_mrmagick_write_gif, MRB_ARGS_REQ(1));
   mrb_define_class_method(mrb, mrmagick, "to_blob", mrb_mrmagick_to_blob, MRB_ARGS_REQ(1));
   mrb_define_class_method(mrb, mrmagick, "from_blob", mrb_mrmagick_to_blob, MRB_ARGS_REQ(2));
-  mrb_define_class_method(mrb, mrmagick, "get_exif_by_entry", mrb_mrmagick_get_exif_by_entry, MRB_ARGS_REQ(1));
+  mrb_define_class_method(mrb, mrmagick, "get_exif_by_entry", mrb_mrmagick_get_exif_by_entry,
+                          MRB_ARGS_REQ(1));
   mrb_define_class_method(mrb, mrmagick, "get_columns", mrb_mrmagick_get_columns, MRB_ARGS_REQ(1));
   mrb_define_class_method(mrb, mrmagick, "get_rows", mrb_mrmagick_get_rows, MRB_ARGS_REQ(1));
   mrb_define_class_method(mrb, mrmagick, "get_format", mrb_mrmagick_get_format, MRB_ARGS_REQ(1));
   DONE;
 }
 
-void mrb_mruby_mrmagick_gem_final(mrb_state *mrb)
+void
+mrb_mruby_mrmagick_gem_final(mrb_state *mrb)
 {
 }
