@@ -84,7 +84,6 @@ writeAndBlob(Image *img, mrb_state *mrb, mrb_value obj)
 
   if(mrb_bool(isBlob)) {
     // read image from blob
-    cerr << "read from blob" << endl;
     mrb_value mrbBlob = mrb_iv_get(mrb, obj, mrb_intern_lit(mrb, "@blob"));
 
     Blob blob(RSTRING_PTR(mrbBlob), RSTRING_LEN(mrbBlob));
