@@ -130,7 +130,7 @@ assert("Mrmagick::Image#columns") do
   tearDownTestImage
 end
 
-assert("Mrmagick::Image#columns") do
+assert("Mrmagick::Image#rows") do
   setupTestImage
   o = Mrmagick::ImageList.new("output.png")
   assert_equal(480,o.rows)
@@ -155,5 +155,18 @@ assert("Mrmagick::Image#crop") do
   t= `identify -format "%[mean]" diff.png`
   t.gsub!("\n","")
   assert_equal("0",t)
+  tearDownTestImage
+end
+
+assert("Mrmagick::ImageList#from_blob") do
+  setupTestImage
+  imgData = `cat output.png`
+  p imgData.length
+  img1 = Mrmagick::ImageList.new()
+  img1.from_blob(imgData)
+  img2 = Mrmagick::ImageList.new("output.png")
+  #assert_equal(img1,img2)
+  assert_equal(img1.rows,img2.rows)
+  assert_equal(img1.columns,img2.columns)
   tearDownTestImage
 end

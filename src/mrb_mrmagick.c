@@ -48,6 +48,7 @@ static const struct mrb_data_type mrb_mrmagick_data_type = {
   "mrb_mrmagick_data", mrb_free,
 };
 
+/*
 static mrb_value
 mrb_mrmagick_init(mrb_state *mrb, mrb_value self)
 {
@@ -68,7 +69,7 @@ mrb_mrmagick_init(mrb_state *mrb, mrb_value self)
   DATA_PTR(self) = data;
 
   return self;
-}
+}*/
 
 static mrb_value
 mrb_mrmagick_scale(mrb_state *mrb, mrb_value self)
@@ -121,14 +122,13 @@ mrb_mruby_mrmagick_gem_init(mrb_state *mrb)
   mrmagick_module = mrb_define_module(mrb, "Mrmagick");
   mrmagick = mrb_define_class_under(mrb, mrmagick_module, "Capi", mrb->object_class);
 
-  mrb_define_method(mrb, mrmagick, "initialize", mrb_mrmagick_init, MRB_ARGS_REQ(1));
+  /*mrb_define_method(mrb, mrmagick, "initialize", mrb_mrmagick_init, MRB_ARGS_REQ(1));*/
   mrb_define_class_method(mrb, mrmagick, "scale", mrb_mrmagick_scale, MRB_ARGS_REQ(3));
   mrb_define_class_method(mrb, mrmagick, "blur", mrb_mrmagick_blur, MRB_ARGS_REQ(4));
   mrb_define_class_method(mrb, mrmagick, "rm", mrb_mrmagick_rm, MRB_ARGS_REQ(1));
   mrb_define_class_method(mrb, mrmagick, "write", mrb_mrmagick_write, MRB_ARGS_REQ(1));
   mrb_define_class_method(mrb, mrmagick, "write_gif", mrb_mrmagick_write_gif, MRB_ARGS_REQ(1));
   mrb_define_class_method(mrb, mrmagick, "to_blob", mrb_mrmagick_to_blob, MRB_ARGS_REQ(1));
-  mrb_define_class_method(mrb, mrmagick, "from_blob", mrb_mrmagick_to_blob, MRB_ARGS_REQ(2));
   mrb_define_class_method(mrb, mrmagick, "get_exif_by_entry", mrb_mrmagick_get_exif_by_entry,
                           MRB_ARGS_REQ(1));
   mrb_define_class_method(mrb, mrmagick, "get_columns", mrb_mrmagick_get_columns, MRB_ARGS_REQ(1));

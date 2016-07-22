@@ -7,6 +7,7 @@ module Mrmagick
     def initialize(path)
       @origImagePath = path
       @exif = {}
+      @isBlob = false
       # p @origImagePath
       # return self
     end
@@ -97,7 +98,9 @@ module Mrmagick
     end
 
     def from_blob(blob)
-      Mrmagick::Capi.from_blob(self, blob)
+      @isBlob = true
+      @blob = blob
+      #Mrmagick::Capi.from_blob(self, blob)
     end
 
     def to_blob
@@ -198,11 +201,14 @@ module Mrmagick
     end
   end
   class ImageList
-    def initialize
-      p 'ImageList.initialize!'
-    end
 
-    def initialize(imagePath)
+    def initialize(*args)
+      if(args.length==0)
+        imagePath = ""
+      else
+        imagePath = args[0]
+      end
+      
       if imagePath.length == 0
         # 物理パスが指定されていない場合、仮想的にファイル名を生成し、保持する。
         # path = `uuidgen`.chomp!

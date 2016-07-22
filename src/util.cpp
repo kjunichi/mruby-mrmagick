@@ -80,11 +80,21 @@ static void
 writeAndBlob(Image *img, mrb_state *mrb, mrb_value obj)
 {
   string srcImageFilePath;
+  mrb_value isBlob = mrb_iv_get(mrb, obj, mrb_intern_lit(mrb, "@isBlob"));
 
-  getSrcImageFilePath(mrb, obj, &srcImageFilePath);
+  if(mrb_bool(isBlob)) {
+    // read image from blob
+    cerr << "read from blob" << endl;
+    mrb_value mrbBlob = mrb_iv_get(mrb, obj, mrb_intern_lit(mrb, "@blob"));
 
-  img->read(srcImageFilePath.c_str());
+    Blob blob(RSTRING_PTR(mrbBlob), RSTRING_LEN(mrbBlob));
+    img->read(blob);
+  } else {
+    // read image from file.
+    getSrcImageFilePath(mrb, obj, &srcImageFilePath);
 
+    img->read(srcImageFilePath.c_str());
+  }
   mrb_value ov = mrb_iv_get(mrb, obj, mrb_intern_lit(mrb, "@orientationv"));
   if (mrb_fixnum_p(ov)) {
     Blob blob = img->profile("exif");
