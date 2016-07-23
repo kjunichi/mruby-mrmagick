@@ -208,7 +208,7 @@ module Mrmagick
       else
         imagePath = args[0]
       end
-      
+
       if imagePath.length == 0
         # 物理パスが指定されていない場合、仮想的にファイル名を生成し、保持する。
         # path = `uuidgen`.chomp!
@@ -291,7 +291,9 @@ module Mrmagick
         if @frames.length > 0
           # 複数のImageからblobを取り出し、これをgifとして保存する。
           blobs = []
-          blobs.push(@image.to_blob)
+          if(@fRealFile)
+            blobs.push(@image.to_blob)
+          end
           @frames.each do|imglist|
             blobs.push(imglist.to_blob)
           end
@@ -301,7 +303,19 @@ module Mrmagick
           @image.write(path)
         end
       else
-        @image.write(path)
+        if(@fRealFile)
+          @image.write(path)
+        else
+          blobs = []
+          @frames.each do|imglist|
+            blobs.push(imglist.to_blob)
+          end
+          if(blobs.length > 0)
+            Mrmagick::Capi.write_gif(path, blobs)
+          else
+            @image.write(path)
+          end
+        end
       end
     end
 
