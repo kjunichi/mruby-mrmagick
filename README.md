@@ -63,7 +63,8 @@ img.orientation # => 1
 ```
 
 ## See also
-- [How to build one binary using with mruby cli](https://github.com/kjunichi/mruby-mrmagick/wiki/How-to-build-h2o-with-mruby-mrmagick)
+- [How to build one binary using with mruby cli](https://github.com/kjunichi/mruby-mrmagick/wiki/How-to-build-one-binary-using-with-mruby-cli)
+- [How to build h2o with mruby-mrmagick](https://github.com/kjunichi/mruby-mrmagick/wiki/How-to-build-h2o-with-mruby-mrmagick)
 - [Rubyist Magazine - RedDotRubyConf 2015 レポート](http://magazine.rubyist.net/?0051-RedDotRubyConf2015#l7)
 - [ngx_mrubyを使った簡単な画像変換サーバを数分で実装してみた - 人間とウェブの未来](http://hb.matsumoto-r.jp/entry/2015/05/13/234326)
 
