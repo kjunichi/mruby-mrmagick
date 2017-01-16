@@ -227,7 +227,8 @@ writeAndBlob(Image *img, mrb_state *mrb, mrb_value obj)
   }
 }
 
-extern "C" mrb_value
+MRB_BEGIN_DECL
+mrb_value
 mrb_mrmagick_write(mrb_state *mrb, mrb_value self)
 {
   Image img;
@@ -248,7 +249,7 @@ mrb_mrmagick_write(mrb_state *mrb, mrb_value self)
 /**
 ファイルパスとBlobの配列を受け取り、gif animationとして書き出す
 */
-extern "C" mrb_value
+mrb_value
 mrb_mrmagick_write_gif(mrb_state *mrb, mrb_value self)
 {
   mrb_value obj;
@@ -273,7 +274,7 @@ mrb_mrmagick_write_gif(mrb_state *mrb, mrb_value self)
   return mrb_nil_value();
 }
 
-extern "C" mrb_value
+mrb_value
 mrb_mrmagick_to_blob(mrb_state *mrb, mrb_value self)
 {
   mrb_value obj;
@@ -294,7 +295,7 @@ mrb_mrmagick_to_blob(mrb_state *mrb, mrb_value self)
 /*
  * Return width of the image.
  */
-extern "C" mrb_value
+mrb_value
 mrb_mrmagick_get_columns(mrb_state *mrb, mrb_value self)
 {
   mrb_value obj;
@@ -312,7 +313,7 @@ mrb_mrmagick_get_columns(mrb_state *mrb, mrb_value self)
  *
  * @param [Image] image.
  */
-extern "C" mrb_value
+mrb_value
 mrb_mrmagick_get_rows(mrb_state *mrb, mrb_value self)
 {
   mrb_value obj;
@@ -330,7 +331,7 @@ mrb_mrmagick_get_rows(mrb_state *mrb, mrb_value self)
  *
  * @param [Image] image.
  */
-extern "C" mrb_value
+mrb_value
 mrb_mrmagick_get_format(mrb_state *mrb, mrb_value self)
 {
   mrb_value obj;
@@ -343,3 +344,4 @@ mrb_mrmagick_get_format(mrb_state *mrb, mrb_value self)
   string format = img.format();
   return mrb_str_new(mrb, format.c_str(), format.length());
 }
+MRB_END_DECL
