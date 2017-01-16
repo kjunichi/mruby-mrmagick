@@ -24,7 +24,7 @@ before_script:
   - which clang
   - sudo PATH=/usr/local/clang-3.4/bin:$PATH make install
   - cd ..
-  - git clone --depth 1 -b 1.2.0 https://github.com/mruby/mruby.git
+  - git clone --depth 1 https://github.com/mruby/mruby.git
   - cd mruby
   - cp -fp ../mruby-mrmagick/.travis_build_config.rb build_config.rb
 script:
