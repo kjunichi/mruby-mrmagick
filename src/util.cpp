@@ -33,7 +33,8 @@ getSrcImageFilePath(mrb_state *mrb, mrb_value obj, string *path)
   *path = filepath;
 }
 
-extern "C" void
+MRB_BEGIN_DECL
+void
 scale(const char *srcPath, const char *destPath, const char *ratio)
 {
   myInitializeMagick();
@@ -44,7 +45,7 @@ scale(const char *srcPath, const char *destPath, const char *ratio)
   image.write(destPath);
 }
 
-extern "C" void
+void
 blur(const char *srcPath, const char *destPath, const double radius, const double sigma)
 {
   myInitializeMagick();
@@ -54,7 +55,8 @@ blur(const char *srcPath, const char *destPath, const double radius, const doubl
   image.blur(radius, sigma);
   image.write(destPath);
 }
-extern "C" mrb_value
+
+mrb_value
 mrb_mrmagick_get_exif_by_entry(mrb_state *mrb, mrb_value self)
 {
   string srcImageFilePath;
@@ -75,6 +77,7 @@ mrb_mrmagick_get_exif_by_entry(mrb_state *mrb, mrb_value self)
 
   return mrb_str_new_cstr(mrb, cstr);
 }
+MRB_END_DECL
 
 static void
 writeAndBlob(Image *img, mrb_state *mrb, mrb_value obj)
