@@ -1,16 +1,4 @@
-# !! Very Important !!
-
-Unforunatly, mruby has some problems for compiling mrbgems which uses C++ now.
-
-You may use some older version mruby.
-for example:
-
-```
-git checkout 477e12c1821b5d6c845b5c80c7dd238bebc61f73
-```
-
-
-# mruby-mrmagick   [![Build Status](https://travis-ci.org/kjunichi/mruby-mrmagick.png?branch=master)](https://travis-ci.org/kjunichi/mruby-mrmagick)
+# mruby-mrmagick [![Build Status](https://travis-ci.org/kjunichi/mruby-mrmagick.png?branch=master)](https://travis-ci.org/kjunichi/mruby-mrmagick)
 
 ImageMagick binding for mruby.
 
