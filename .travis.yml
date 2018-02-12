@@ -5,7 +5,7 @@ compiler:
 before_install:
   - sudo apt-get -qq update
 install:
-  - sudo apt-get -qq install rake bison git gperf texinfo libtiff-dev
+  - sudo apt-get -qq install rake bison git gperf texinfo libtiff-dev help2man
 before_script:
   - cd ..
   - git clone http://git.sv.gnu.org/r/autoconf.git
