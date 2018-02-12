@@ -139,7 +139,7 @@ assert('Mrmagick::Image#columns') do
   tearDownTestImage
 end
 
-assert('Mrmagick::Image#columns') do
+assert('Mrmagick::Image#rows') do
   setupTestImage
   o = Mrmagick::ImageList.new('output.png')
   assert_equal(480, o.rows)
