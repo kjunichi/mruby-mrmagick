@@ -14,6 +14,6 @@ MRuby::Build.new('test') do |conf|
 
   conf.gembox 'full-core'
   
-  conf.gem :git => 'https://github.com/iij/mruby-io.git'
+  #conf.gem :git => 'https://github.com/iij/mruby-io.git'
   conf.gem '../mruby-mrmagick'
 end

@@ -1,11 +1,10 @@
 language: c
 compiler:
   - gcc
-  - clang
 before_install:
   - sudo apt-get -qq update
 install:
-  - sudo apt-get -qq install rake bison git gperf texinfo libtiff-dev
+  - sudo apt-get -qq install rake bison git gperf texinfo libtiff-dev help2man
 before_script:
   - cd ..
   - git clone http://git.sv.gnu.org/r/autoconf.git
@@ -19,13 +18,15 @@ before_script:
   - cd ..
   - git clone -b ImageMagick-6 --depth 1 https://github.com/ImageMagick/ImageMagick.git
   - cd ImageMagick
-  - ./configure --prefix=/usr --without-xml --without-perl --disable-docs
+  - ./configure --prefix=/usr/local --without-xml --without-perl --disable-docs
   - make -j -l 4
   - which clang
   - sudo PATH=/usr/local/clang-3.4/bin:$PATH make install
+  - export PATH=/usr/local/bin:$PATH
+  - export LD_LIBRARY_PATH=/usr/local/lib
   - cd ..
   - git clone --depth 1 -b 1.2.0 https://github.com/mruby/mruby.git
   - cd mruby
   - cp -fp ../mruby-mrmagick/.travis_build_config.rb build_config.rb
 script:
-  - make all test
+  - rake test

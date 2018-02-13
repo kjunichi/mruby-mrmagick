@@ -75,8 +75,8 @@ assert('Mrmagick::Image#orientation') do
   
   # for ImageMagick v7
   result = t.orientation
-  result.gsub!('', '1')
-  assert_equal('1', t.orientation)
+  result = '1' if result == ""
+  assert_equal('1', result)
 
   t = Mrmagick::ImageList.new('output.png')
   t.orientation = 7
