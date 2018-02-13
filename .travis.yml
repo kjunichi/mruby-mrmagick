@@ -29,4 +29,4 @@ before_script:
   - cd mruby
   - cp -fp ../mruby-mrmagick/.travis_build_config.rb build_config.rb
 script:
-  - make all test
+  - rake test
