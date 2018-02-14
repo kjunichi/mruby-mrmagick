@@ -102,12 +102,12 @@ mrb_mrmagick_rm(mrb_state *mrb, mrb_value self)
 
   mrb_get_args(mrb, "A", &ary);
   num_files = RARRAY_LEN(ary);
-  printf("delete Files %d\n", num_files);
+  
   for (i = 0; i < num_files; ++i) {
     val = mrb_ary_ref(mrb, ary, i);
     strncpy(filepath, RSTRING_PTR(val), RSTRING_LEN(val));
     filepath[RSTRING_LEN(val)] = '\0';
-    printf("array[%d]=%s\n", i, filepath);
+
     remove(filepath);
   }
   return mrb_str_new_cstr(mrb, "hi!!");
