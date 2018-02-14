@@ -19,7 +19,8 @@ before_script:
   - cd ..
   - git clone -b ImageMagick-6 --depth 1 https://github.com/ImageMagick/ImageMagick.git
   - cd ImageMagick
-  - CC="${CC} -std=gnu99" ./configure --prefix=/usr/local --without-xml --without-perl --disable-docs
+  - echo $CC
+  - CC="gcc" ./configure --prefix=/usr/local --without-xml --without-perl --disable-docs
   - make -j -l 4
   - which clang
   - sudo PATH=/usr/local/clang-3.4/bin:$PATH make install
