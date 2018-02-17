@@ -2,6 +2,10 @@ language: c
 compiler:
   - gcc
   - clang
+env:
+  - MRUBY_VERSION=1.2.0
+  - MRUBY_VERSION=1.3.0
+  - MRUBY_VERSION=1.4.0
 before_install:
   - sudo apt-get -qq update
 install:
@@ -27,7 +31,7 @@ before_script:
   - export PATH=/usr/local/bin:$PATH
   - export LD_LIBRARY_PATH=/usr/local/lib
   - cd ..
-  - git clone --depth 1 -b 1.2.0 https://github.com/mruby/mruby.git
+  - git clone --depth 1 -b $MRUBY_VERSION https://github.com/mruby/mruby.git
   - cd mruby
   - cp -fp ../mruby-mrmagick/.travis_build_config.rb build_config.rb
 script:
