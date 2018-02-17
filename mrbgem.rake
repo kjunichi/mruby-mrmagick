@@ -9,13 +9,18 @@ MRuby::Gem::Specification.new('mruby-mrmagick') do |spec|
     magick_libs = `/usr/#{build.host_target}/bin/Magick++-config --ldflags --libs`.chomp!
   else
     if ENV['OS'] == 'Windows_NT'
-      imPaths = Dir.glob("c:/Program Files/ImageMagick-6.**").sort!
+      imPaths = Dir.glob("c:/Program Files/ImageMagick-**").sort!
+
       imHomeD = imPaths[imPaths.size-1].gsub!('/','\\')
       imHome = imPaths[imPaths.size-1]
       spec.cc.flags << "/I \"#{imHomeD}\\include\""
       spec.cxx.flags << "/I \"#{imHomeD}\\include\""
       spec.linker.library_paths += ["#{imHome}/lib"]
-      spec.linker.libraries += ['CORE_RL_magick_','CORE_RL_Magick++_','CORE_RL_wand_']
+      if imHome.include?("-6") then
+        spec.linker.libraries += ['CORE_RL_magick_','CORE_RL_Magick++_','CORE_RL_wand_']
+      else
+        spec.linker.libraries += ['CORE_RL_MagickCore_','CORE_RL_Magick++_','CORE_RL_MagickWand_']
+      end
     else
       magick_cflg =  `Magick++-config --cxxflags --cppflags`.chomp!
       magick_libs = `Magick++-config --ldflags --libs`.chomp!
@@ -51,16 +56,30 @@ MRuby.each_target do
   next if kind_of? MRuby::CrossBuild
   if ENV['OS'] == 'Windows_NT'
     require 'fileutils'
-    imPaths = Dir.glob("c:/Program Files/ImageMagick-6.**").sort!
+    imPaths = Dir.glob("c:/Program Files/ImageMagick-*.**").sort!
     imHome = imPaths[imPaths.size-1]
-    FileUtils.cp("#{imHome}/CORE_RL_magick_.dll", "#{build_dir}/bin/")
-    FileUtils.cp("#{imHome}/CORE_RL_Magick++_.dll", "#{build_dir}/bin/")
-    FileUtils.cp("#{imHome}/CORE_RL_wand_.dll", "#{build_dir}/bin/")
+    FileUtils.mkdir_p("#{build_dir}/bin/")
+    if imHome.include?("-6") then
+      FileUtils.cp("#{imHome}/CORE_RL_magick_.dll", "#{build_dir}/bin/")
+      FileUtils.cp("#{imHome}/CORE_RL_Magick++_.dll", "#{build_dir}/bin/")
+      FileUtils.cp("#{imHome}/CORE_RL_wand_.dll", "#{build_dir}/bin/")
+    else
+      FileUtils.cp("#{imHome}/CORE_RL_MagickCore_.dll", "#{build_dir}/bin/")
+      FileUtils.cp("#{imHome}/CORE_RL_Magick++_.dll", "#{build_dir}/bin/")
+      FileUtils.cp("#{imHome}/CORE_RL_MagickWand_.dll", "#{build_dir}/bin/")
+    end
     puts @name
     if @name == 'host'
-      FileUtils.cp("#{imHome}/CORE_RL_magick_.dll", "#{MRUBY_ROOT}/bin/")
-      FileUtils.cp("#{imHome}/CORE_RL_Magick++_.dll", "#{MRUBY_ROOT}/bin/")
-      FileUtils.cp("#{imHome}/CORE_RL_wand_.dll", "#{MRUBY_ROOT}/bin/")
+      if imHome.include?("-6")  then
+        FileUtils.cp("#{imHome}/CORE_RL_magick_.dll", "#{MRUBY_ROOT}/bin/")
+        FileUtils.cp("#{imHome}/CORE_RL_Magick++_.dll", "#{MRUBY_ROOT}/bin/")
+        FileUtils.cp("#{imHome}/CORE_RL_wand_.dll", "#{MRUBY_ROOT}/bin/")  
+      else 
+        FileUtils.cp("#{imHome}/CORE_RL_MagickCore_.dll", "#{MRUBY_ROOT}/bin/")
+        FileUtils.cp("#{imHome}/CORE_RL_Magick++_.dll", "#{MRUBY_ROOT}/bin/")
+        FileUtils.cp("#{imHome}/CORE_RL_MagickWand_.dll", "#{MRUBY_ROOT}/bin/")  
+      end
+
     end
   end
 end
