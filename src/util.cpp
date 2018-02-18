@@ -340,3 +340,50 @@ mrb_mrmagick_get_format(mrb_state *mrb, mrb_value self)
   string format = img.format();
   return mrb_str_new(mrb, format.c_str(), format.length());
 }
+
+/*
+ * Return imagemagick's support format list.
+ *
+ */
+extern "C" mrb_value
+mrb_mrmagick_formats(mrb_state *mrb, mrb_value self)
+{
+  string str;
+  list<CoderInfo> coderList;
+   coderInfoList( &coderList,           // Reference to output list 
+                 CoderInfo::TrueMatch, // Match readable formats 
+                 CoderInfo::AnyMatch,  // Don't care about writable formats 
+                 CoderInfo::AnyMatch); // Don't care about multi-frame support 
+  list<CoderInfo>::iterator entry = coderList.begin(); 
+  while(entry != coderList.end()) 
+  {
+    // B 	is "*" if the format has native blob support, and "-" otherwise.
+    // R 	is "r" if ImageMagick can read the format, and "-" otherwise.
+    // W 	is "w" if ImageMagick can write the format, and "-" otherwise.
+    // A 	is "+" if the format supports multi-image files, and "-" otherwise.
+    
+    str += entry->name();
+    str += "=>";
+    //str += entry->description();
+    //str += "Readable = "; 
+    str += "*";
+    if ( entry->isReadable() ) 
+      str += "r"; 
+    else 
+      str += "-"; 
+    //str += "Writable = "; 
+    if ( entry->isWritable() ) 
+      str += "w"; 
+    else 
+      str += "-"; 
+    //str +=  ", "; 
+    //str += "Multiframe = "; 
+    if ( entry->isMultiFrame() ) 
+      str += "+"; 
+    else 
+      str += "-"; 
+    str += "\n";
+    entry ++;
+  }
+  return mrb_str_new(mrb, str.c_str(), str.length());
+}

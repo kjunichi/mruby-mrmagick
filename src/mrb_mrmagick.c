@@ -36,6 +36,8 @@ extern mrb_value
 mrb_mrmagick_get_rows(mrb_state *mrb, mrb_value self);
 extern mrb_value
 mrb_mrmagick_get_format(mrb_state *mrb, mrb_value self);
+extern mrb_value
+mrb_mrmagick_formats(mrb_state *mrb, mrb_value self);
 
 #define DONE mrb_gc_arena_restore(mrb, 0);
 
@@ -120,6 +122,8 @@ mrb_mruby_mrmagick_gem_init(mrb_state *mrb)
   struct RClass *mrmagick;
 
   mrmagick_module = mrb_define_module(mrb, "Mrmagick");
+
+  mrb_define_module_function(mrb, mrmagick_module, "capi_formats", mrb_mrmagick_formats, MRB_ARGS_NONE());
   mrmagick = mrb_define_class_under(mrb, mrmagick_module, "Capi", mrb->object_class);
 
   /*mrb_define_method(mrb, mrmagick, "initialize", mrb_mrmagick_init, MRB_ARGS_REQ(1));*/

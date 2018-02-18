@@ -180,3 +180,7 @@ assert("Mrmagick::ImageList#from_blob") do
   assert_equal(img1.columns,img2.columns)
   tearDownTestImage
 end
+
+assert("Mrmagick.formats") do
+  assert_equal("",Mrmagick.formats)
+end

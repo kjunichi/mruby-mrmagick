@@ -472,4 +472,9 @@ module Mrmagick
   end
   class Draw
   end
+
+  def self.formats
+    puts "formats"
+    self.capi_formats
+  end
 end
