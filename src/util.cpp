@@ -349,6 +349,8 @@ extern "C" mrb_value
 mrb_mrmagick_formats(mrb_state *mrb, mrb_value self)
 {
   string str;
+  mrb_value table = mrb_hash_new(mrb);
+
   list<CoderInfo> coderList;
    coderInfoList( &coderList,           // Reference to output list 
                  CoderInfo::TrueMatch, // Match readable formats 
@@ -362,11 +364,15 @@ mrb_mrmagick_formats(mrb_state *mrb, mrb_value self)
     // W 	is "w" if ImageMagick can write the format, and "-" otherwise.
     // A 	is "+" if the format supports multi-image files, and "-" otherwise.
     
-    str += entry->name();
-    str += "=>";
+    
+    string keystr = entry->name();
+    mrb_value key = mrb_str_new(mrb, keystr.c_str(), keystr.length());
+
+    //str += "=>";
+
     //str += entry->description();
     //str += "Readable = "; 
-    str += "*";
+    str = "*";
     if ( entry->isReadable() ) 
       str += "r"; 
     else 
@@ -382,8 +388,12 @@ mrb_mrmagick_formats(mrb_state *mrb, mrb_value self)
       str += "+"; 
     else 
       str += "-"; 
-    str += "\n";
+    //str += "\n";
+
     entry ++;
+    mrb_value val = mrb_str_new(mrb, str.c_str(), str.length());
+    mrb_hash_set(mrb, table, key, val);
   }
-  return mrb_str_new(mrb, str.c_str(), str.length());
+  //mrb_iv_set(mrb, self, mrb_intern_lit(mrb, "table"), table);
+  return table;
 }
