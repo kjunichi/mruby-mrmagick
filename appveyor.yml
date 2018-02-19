@@ -1,0 +1,32 @@
+version: "{build}"
+
+os: Visual Studio 2015
+
+clone_depth: 50
+
+environment:
+  matrix:
+    # Visual Studio 2015 64bit
+    - visualcpp: C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat
+  machine: amd64
+install:
+  - cinst winflexbison
+  - cinst imagemagick.app -PackageParameters "InstallDevelopmentHeaders=true LegacySupport=true"
+  - refreshenv
+  - dir "C:\Program Files\ImageMagick-7.0.7-Q16"
+  - where convert
+  - where composite
+  - where identify
+  - convert -size "640x480" -background "#C0C0C0" -fill "#FFFF00" caption:"ABC" output.png
+  - convert -scale 50% output.png dest.png
+  - call "%visualcpp%" %machine%
+init:
+  - call "%visualcpp%" %machine%
+  - set YACC=win_bison
+build_script:
+ - cd ..
+ - git clone https://github.com/mruby/mruby.git
+ - cd mruby
+ - set MRUBY_CONFIG=..\mruby-mrmagick\appveyor_config.rb
+ - rake all
+ 
