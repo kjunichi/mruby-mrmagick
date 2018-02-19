@@ -25,4 +25,5 @@ build_script:
  - rake all test
  - dir
  - dir build\host\bin
+ - convert -size 640x480 -background "#C0C0C0" -fill "#FFFF00" caption:"ABC" output.png
  
