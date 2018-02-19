@@ -170,7 +170,11 @@ end
 
 assert("Mrmagick::ImageList#from_blob") do
   setupTestImage
-  imgData = `cat output.png`
+  if ENV['VisualStudioVersion'] || ENV['VSINSTALLDIR'] then
+    imgData = `type output.png`
+  else
+    imgData = `cat output.png`
+  end
   p imgData.length
   img1 = Mrmagick::ImageList.new()
   img1.from_blob(imgData)
