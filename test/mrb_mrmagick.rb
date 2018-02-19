@@ -6,8 +6,8 @@ def setupTestImage
 end
 
 def tearDownTestImage
-  #`rm -f t.png dest.png dest*.gif diff.png output.png`
-  `del /Q t.png dest.png dest*.gif diff.png output.png`
+  `rm -f t.png dest.png dest*.gif diff.png output.png`
+  #`del /Q t.png dest.png dest*.gif diff.png output.png`
 end
 
 assert('Mrmagick::Image#scale') do
@@ -18,6 +18,6 @@ assert('Mrmagick::Image#scale') do
   #t = `identify -format "%[mean]" diff.png`
   #t.gsub!("\n","")
   #assert_equal('0', t)
-  #tearDownTestImage
+  tearDownTestImage
 end
 
