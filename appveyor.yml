@@ -11,10 +11,9 @@ environment:
   machine: amd64
 install:
   - cinst winflexbison
-  - cinst -PackageParameters InstallDevelopmentHeaders=true imagemagick
+  - cinst -PackageParameters InstallDevelopmentHeaders=true LegacySupport=true imagemagick.app
   - refreshenv
   - dir "C:\Program Files\ImageMagick-7.0.7-Q16"
-  - echo %PATH%
   - where convert
   - where composite
   - where identify
