@@ -29,7 +29,5 @@ build_script:
  - cd mruby
  - set MRUBY_CONFIG=..\mruby-mrmagick\appveyor_config.rb
  - rake all test
- - convert -size "640x480" -background "#C0C0C0" -fill "#FFFF00" caption:"ABC" output.png
- - convert -scale 50% output.png dest.png
  - dir
  
