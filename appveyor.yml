@@ -18,6 +18,7 @@ install:
   - where composite
   - where identify
   - convert -size "640x480" -background "#C0C0C0" -fill "#FFFF00" caption:"ABC" output.png
+  - convert -scale 50% output.png dest.png
   - call "%visualcpp%" %machine%
 init:
   - call "%visualcpp%" %machine%
