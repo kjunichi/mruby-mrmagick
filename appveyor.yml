@@ -22,7 +22,7 @@ build_script:
  - git clone https://github.com/mruby/mruby.git
  - cd mruby
  - set MRUBY_CONFIG=..\mruby-mrmagick\appveyor_config.rb
- - where echo
- - rake --trace all test
+ - rake all test
  - dir
+ - dir build\host\bin
  
