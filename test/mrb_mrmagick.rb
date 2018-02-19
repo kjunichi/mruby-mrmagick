@@ -2,7 +2,7 @@
 ## Mrmagick Test
 ##
 def setupTestImage
-  `convert -size 640x480 -background "#C0C0C0" -fill "#FFFF00" caption:"ABC" output.png`
+  `convert -size "640x480" -background "#C0C0C0" -fill "#FFFF00" caption:"ABC" output.png`
 end
 
 def tearDownTestImage
