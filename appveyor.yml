@@ -13,7 +13,7 @@ install:
   - cinst winflexbison
   - cinst -PackageParameters InstallDevelopmentHeaders=true imagemagick
   - refreshenv
-  - set PATH="C:\Program Files\ImageMagick-7.0.7-Q16";%PATH%
+  - set PATH=C:\Program Files\ImageMagick-7.0.7-Q16;%PATH%
   - echo %PATH%
   - where convert
   - where composite
