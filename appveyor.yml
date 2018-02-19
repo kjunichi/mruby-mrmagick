@@ -22,5 +22,6 @@ build_script:
  - cd mruby
  - set MRUBY_CONFIG=..\mruby-mrmagick\appveyor_config.rb
  - rake all
- - bin\mruby --version
+ - dir build\host\bin\
+ - build\host\bin\mruby --version
  
