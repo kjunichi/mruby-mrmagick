@@ -11,8 +11,9 @@ environment:
   machine: amd64
 install:
   - cinst winflexbison
-  - cinst imagemagick.app
+  - cinst imagemagick
   - dir c:\tools\
+  - dir c:\Program Files
 init:
   - call "%visualcpp%" %machine%
   - set YACC=win_bison
