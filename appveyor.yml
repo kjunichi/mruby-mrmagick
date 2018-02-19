@@ -13,7 +13,6 @@ install:
   - cinst winflexbison
   - cinst -PackageParameters InstallDevelopmentHeaders=true imagemagick
   - refreshenv
-  - dir "C:\Program Files\ImageMagick-7.0.7-Q16"
   - call "%visualcpp%" %machine%
 init:
   - call "%visualcpp%" %machine%
@@ -23,7 +22,5 @@ build_script:
  - git clone https://github.com/mruby/mruby.git
  - cd mruby
  - set MRUBY_CONFIG=..\mruby-mrmagick\appveyor_config.rb
- - rake --trace all 
- - dir build\host\bin\
- - build\host\bin\mruby --version
+ - rake test
  
