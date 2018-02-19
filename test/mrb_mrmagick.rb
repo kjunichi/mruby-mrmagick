@@ -11,7 +11,7 @@ def tearDownTestImage
 end
 
 assert('Mrmagick::Image#scale') do
-  #setupTestImage
+  setupTestImage
   #Mrmagick::ImageList.new('output.png').scale(0.5).write('t.png')
   #`convert -scale 50% output.png dest.png`
   #`composite -compose difference dest.png t.png diff.png`
