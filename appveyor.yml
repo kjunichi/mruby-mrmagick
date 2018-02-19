@@ -21,5 +21,6 @@ build_script:
  - git clone https://github.com/mruby/mruby.git
  - cd mruby
  - set MRUBY_CONFIG=..\mruby-mrmagick\appveyor_config.rb
- - rake all test
+ - rake all
+ - bin\mruby --version
  
