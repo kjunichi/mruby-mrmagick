@@ -12,6 +12,7 @@ environment:
 install:
   - cinst winflexbison
   - cinst -PackageParameters InstallDevelopmentHeaders=true imagemagick
+  - refreshenv
   - dir "C:\Program Files\ImageMagick-7.0.7-Q16"
 init:
   - call "%visualcpp%" %machine%
