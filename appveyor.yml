@@ -27,4 +27,5 @@ build_script:
  - cd mruby
  - set MRUBY_CONFIG=..\mruby-mrmagick\appveyor_config.rb
  - rake all test
+ - dir
  
