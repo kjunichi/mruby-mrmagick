@@ -17,6 +17,7 @@ install:
   - where convert
   - where composite
   - where identify
+  - convert -size "640x480" -background "#C0C0C0" -fill "#FFFF00" caption:"ABC" output.png
   - call "%visualcpp%" %machine%
 init:
   - call "%visualcpp%" %machine%
