@@ -22,10 +22,9 @@ build_script:
  - git clone https://github.com/mruby/mruby.git
  - cd mruby
  - set MRUBY_CONFIG=..\mruby-mrmagick\appveyor_config.rb
- - set path=\program files\ImageMagick-7.0.7-Q16;%path%
- - rake all test
- - dir "\Program Files\imagemagick*"
+ - set path="c:\program files\ImageMagick-7.0.7-Q16";%path%
  - where convert
  - where composite
  - where identify
+ - rake all test
  
