@@ -20,7 +20,7 @@ void
 myInitializeMagick()
 {
   if (!gMagickInitFlg) {
-    InitializeMagick("./mruby");
+    InitializeMagick(".");
     gMagickInitFlg = true;
   }
 }
