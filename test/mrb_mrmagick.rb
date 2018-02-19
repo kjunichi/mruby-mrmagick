@@ -6,11 +6,7 @@ def setupTestImage
 end
 
 def tearDownTestImage
-  if ENV['OS'] == 'Windows_NT' then
-    `del /Q t.png dest.png dest*.gif diff.png output.png`
-  else
-    `rm -f t.png dest.png dest*.gif diff.png output.png`
-  end
+  `rm -f t.png dest.png dest*.gif diff.png output.png`
 end
 
 assert('Mrmagick::Image#scale') do
