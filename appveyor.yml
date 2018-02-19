@@ -13,6 +13,11 @@ install:
   - cinst winflexbison
   - cinst -PackageParameters InstallDevelopmentHeaders=true imagemagick
   - refreshenv
+  - set PATH="C:\Program Files\ImageMagick-7.0.7-Q16";%PATH%
+  - echo %PATH%
+  - where convert
+  - where composite
+  - where identify
   - call "%visualcpp%" %machine%
 init:
   - call "%visualcpp%" %machine%
@@ -22,9 +27,5 @@ build_script:
  - git clone https://github.com/mruby/mruby.git
  - cd mruby
  - set MRUBY_CONFIG=..\mruby-mrmagick\appveyor_config.rb
- - set path="c:\program files\ImageMagick-7.0.7-Q16";%path%
- - where convert
- - where composite
- - where identify
  - rake all test
  
