@@ -6,7 +6,7 @@ def setupTestImage
 end
 
 def tearDownTestImage
-  `rm -f t.png dest.png dest*.gif diff.png output.png`
+  #`rm -f t.png dest.png dest*.gif diff.png output.png`
 end
 
 assert('Mrmagick::Image#scale') do
