@@ -473,8 +473,15 @@ module Mrmagick
   class Draw
   end
 
-  def self.formats
-    puts "formats"
-    self.capi_formats
+  def self.formats(&blk)
+    #puts "formats"
+    h = self.capi_formats
+    if blk then
+      h.each {|item|
+        blk.call(item)
+      }
+    else 
+      return h
+    end
   end
 end

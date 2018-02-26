@@ -182,5 +182,6 @@ assert("Mrmagick::ImageList#from_blob") do
 end
 
 assert("Mrmagick.formats") do
-  assert_equal("",Mrmagick.formats)
+  assert_equal(true, Mrmagick.formats.has_key?("PNM"))
+  Mrmagick.formats {|i| assert_equal(false, i.empty?)}
 end
