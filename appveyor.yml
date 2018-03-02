@@ -13,7 +13,7 @@ install:
   #- choco upgrade chocolatey
   - choco install wget
   - wget https://kjunichi.github.io/vendor/win_flex_bison-latest.zip
-  - unzip win_flex_bison-2.5.10.zip
+  - unzip win_flex_bison-latest.zip
   - cd
   - cinst imagemagick.app -PackageParameters "InstallDevelopmentHeaders=true LegacySupport=true"
   - refreshenv
