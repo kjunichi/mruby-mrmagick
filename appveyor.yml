@@ -14,6 +14,7 @@ install:
   - choco install wget
   - wget https://kjunichi.github.io/vendor/win_flex_bison-latest.zip
   - unzip win_flex_bison-latest.zip
+  - dir
   - cd
   - set path=%path%;C:\projects\mruby-mrmagick\
   - cinst imagemagick.app -PackageParameters "InstallDevelopmentHeaders=true LegacySupport=true"
