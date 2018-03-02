@@ -24,6 +24,7 @@ install:
   - convert -size "640x480" -background "#C0C0C0" -fill "#FFFF00" caption:"ABC" output.png
   - convert -scale 50% output.png dest.png
   - call "%visualcpp%" %machine%
+  - set YACC=win_bison
 init:
   - call "%visualcpp%" %machine%
   - set YACC=win_bison
