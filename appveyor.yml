@@ -11,7 +11,7 @@ environment:
   machine: amd64
 install:
   - choco install wget
-  - wget https://sourceforge.net/projects/winflexbison/files/old_versions/win_flex_bison-2.5.10.zip
+  - wget --no-check-certificate https://sourceforge.net/projects/winflexbison/files/old_versions/win_flex_bison-2.5.10.zip
   #- choco install --ignore-checksums winflexbison3
   - cinst imagemagick.app -PackageParameters "InstallDevelopmentHeaders=true LegacySupport=true"
   - refreshenv
