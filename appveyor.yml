@@ -13,10 +13,13 @@ install:
   #- choco upgrade chocolatey
   - choco install wget
   - wget https://kjunichi.github.io/vendor/win_flex_bison-latest.zip
-  - unzip win_flex_bison-latest.zip
+  - mkdir win_flex_bison-latest
+  - cd win_flex_bison-latest
+  - unzip ..\win_flex_bison-latest.zip
+  = cd ..
   - dir
   - cd
-  - set PATH=%PATH%;C:\projects\mruby-mrmagick
+  - set PATH=%PATH%;C:\projects\mruby-mrmagick\win_flex_bison-latest
   - win_bison --help
   - cinst imagemagick.app -PackageParameters "InstallDevelopmentHeaders=true LegacySupport=true"
   - refreshenv
