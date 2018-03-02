@@ -12,18 +12,15 @@ environment:
 install:
   #- choco upgrade chocolatey
   - choco install wget
-  - wget --no-check-certificate https://ja.osdn.net/projects/sfnet_winflexbison/downloads/win_flex_bison-latest.zip/
-  - type win_flex_bison-2.5.10.zip
+  - wget win_flex_bison-latest.zip
+  - unzip win_flex_bison-2.5.10.zip
+  - cd
   - choco install winflexbison3
   - cinst imagemagick.app -PackageParameters "InstallDevelopmentHeaders=true LegacySupport=true"
   - refreshenv
   - dir "C:\Program Files\ImageMagick-7.0.7-Q16"
-  - where convert
-  - where composite
-  - where identify
   - convert -size "640x480" -background "#C0C0C0" -fill "#FFFF00" caption:"ABC" output.png
   - convert -scale 50% output.png dest.png
-  - call "%visualcpp%" %machine%
 init:
   - call "%visualcpp%" %machine%
   - set YACC=win_bison
