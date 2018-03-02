@@ -12,10 +12,9 @@ environment:
 install:
   #- choco upgrade chocolatey
   - choco install wget
-  - wget win_flex_bison-latest.zip
+  - wget https://kjunichi.github.io/vendor/win_flex_bison-latest.zip
   - unzip win_flex_bison-2.5.10.zip
   - cd
-  - choco install winflexbison3
   - cinst imagemagick.app -PackageParameters "InstallDevelopmentHeaders=true LegacySupport=true"
   - refreshenv
   - dir "C:\Program Files\ImageMagick-7.0.7-Q16"
