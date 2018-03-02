@@ -19,9 +19,6 @@ install:
   - cd ..
   - dir
   - cd
-  - set PATH=C:\projects\mruby-mrmagick\win_flex_bison;%PATH%;
-  - where win_bison
-  - win_bison --help
   - cinst imagemagick.app -PackageParameters "InstallDevelopmentHeaders=true LegacySupport=true"
   - refreshenv
   - dir "C:\Program Files\ImageMagick-7.0.7-Q16"
@@ -29,6 +26,8 @@ install:
   - convert -scale 50% output.png dest.png
   - call "%visualcpp%" %machine%
   - set YACC=win_bison
+  - set PATH=C:\projects\mruby-mrmagick\win_flex_bison;%PATH%;
+  - where win_bison
 init:
   - call "%visualcpp%" %machine%
   - set YACC=win_bison
