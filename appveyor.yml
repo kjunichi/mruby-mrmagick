@@ -15,6 +15,7 @@ install:
   - wget https://kjunichi.github.io/vendor/win_flex_bison-latest.zip
   - unzip win_flex_bison-latest.zip
   - cd
+  - set path=%path%;C:\projects\mruby-mrmagick\
   - cinst imagemagick.app -PackageParameters "InstallDevelopmentHeaders=true LegacySupport=true"
   - refreshenv
   - dir "C:\Program Files\ImageMagick-7.0.7-Q16"
