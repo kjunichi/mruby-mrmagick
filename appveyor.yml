@@ -19,7 +19,8 @@ install:
   - cd ..
   - dir
   - cd
-  - set PATH=%PATH%;C:\projects\mruby-mrmagick\win_flex_bison
+  - set PATH=C:\projects\mruby-mrmagick\win_flex_bison;%PATH%;
+  - where win_bison
   - win_bison --help
   - cinst imagemagick.app -PackageParameters "InstallDevelopmentHeaders=true LegacySupport=true"
   - refreshenv
