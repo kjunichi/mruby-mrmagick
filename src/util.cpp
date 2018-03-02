@@ -14,15 +14,10 @@
 using namespace std;
 using namespace Magick;
 
-static bool gMagickInitFlg = false;
-
-void
+extern "C" void
 myInitializeMagick()
 {
-  if (!gMagickInitFlg) {
-    InitializeMagick(".");
-    gMagickInitFlg = true;
-  }
+  InitializeMagick(".");
 }
 
 static void
@@ -36,7 +31,6 @@ getSrcImageFilePath(mrb_state *mrb, mrb_value obj, string *path)
 extern "C" void
 scale(const char *srcPath, const char *destPath, const char *ratio)
 {
-  myInitializeMagick();
   Image image;
   image.read(srcPath);
   // calc geom.
@@ -47,7 +41,6 @@ scale(const char *srcPath, const char *destPath, const char *ratio)
 extern "C" void
 blur(const char *srcPath, const char *destPath, const double radius, const double sigma)
 {
-  myInitializeMagick();
   Image image;
   image.read(srcPath);
   // calc geom.
@@ -96,14 +89,10 @@ writeAndBlob(Image *img, mrb_state *mrb, mrb_value obj)
   }
   mrb_value ov = mrb_iv_get(mrb, obj, mrb_intern_lit(mrb, "@orientationv"));
   if (mrb_fixnum_p(ov)) {
-    Blob blob = img->profile("exif");
-    if (blob.data() == NULL) {
-      // we generate dummy exif data.
+    if(img->orientation() == 0) {
       Blob exifdata(dexifData, dexifDataLength);
       img->profile("exif", exifdata);
-      // make own exif data.
     }
-
     int orientation = mrb_fixnum(ov);
     switch (orientation) {
     case 1:
