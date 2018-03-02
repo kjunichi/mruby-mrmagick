@@ -17,6 +17,8 @@
 extern void
 myputs();
 extern void
+myInitializeMagick();
+extern void
 scale(const char *src_path, const char *dst_path, const char *ratio);
 extern void
 blur(const char *src_path, const char *dst_path, const double radius, const double sigma);
@@ -120,6 +122,8 @@ mrb_mruby_mrmagick_gem_init(mrb_state *mrb)
 {
   struct RClass *mrmagick_module;
   struct RClass *mrmagick;
+
+  myInitializeMagick();
 
   mrmagick_module = mrb_define_module(mrb, "Mrmagick");
 

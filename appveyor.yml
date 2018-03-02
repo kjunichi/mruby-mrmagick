@@ -10,16 +10,24 @@ environment:
     - visualcpp: C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat
   machine: amd64
 install:
-  - cinst winflexbison
+  #- choco upgrade chocolatey
+  - choco install wget
+  - wget https://kjunichi.github.io/vendor/win_flex_bison-2.4.12.zip
+  - mkdir win_flex_bison
+  - cd win_flex_bison
+  - unzip ..\win_flex_bison-2.4.12.zip
+  - cd ..
+  - dir
+  - cd
   - cinst imagemagick.app -PackageParameters "InstallDevelopmentHeaders=true LegacySupport=true"
   - refreshenv
   - dir "C:\Program Files\ImageMagick-7.0.7-Q16"
-  - where convert
-  - where composite
-  - where identify
   - convert -size "640x480" -background "#C0C0C0" -fill "#FFFF00" caption:"ABC" output.png
   - convert -scale 50% output.png dest.png
   - call "%visualcpp%" %machine%
+  - set YACC=win_bison
+  - set PATH=C:\projects\mruby-mrmagick\win_flex_bison;%PATH%;
+  - where win_bison
 init:
   - call "%visualcpp%" %machine%
   - set YACC=win_bison
