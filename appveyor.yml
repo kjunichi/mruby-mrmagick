@@ -21,6 +21,7 @@ install:
   - dir "C:\Program Files\ImageMagick-7.0.7-Q16"
   - convert -size "640x480" -background "#C0C0C0" -fill "#FFFF00" caption:"ABC" output.png
   - convert -scale 50% output.png dest.png
+  - call "%visualcpp%" %machine%
 init:
   - call "%visualcpp%" %machine%
   - set YACC=win_bison
