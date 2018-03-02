@@ -16,7 +16,7 @@ install:
   - mkdir win_flex_bison-latest
   - cd win_flex_bison-latest
   - unzip ..\win_flex_bison-latest.zip
-  = cd ..
+  - cd ..
   - dir
   - cd
   - set PATH=%PATH%;C:\projects\mruby-mrmagick\win_flex_bison-latest
