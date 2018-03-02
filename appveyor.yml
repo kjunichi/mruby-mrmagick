@@ -10,6 +10,7 @@ environment:
     - visualcpp: C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat
   machine: amd64
 install:
+  - choco upgrade chocolatey
   - choco install wget
   - wget --no-check-certificate https://ja.osdn.net/frs/g_redir.php?m=kent&f=winflexbison%2Fold_versions%2Fwin_flex_bison-2.5.10.zip
   - unzip win_flex_bison-2.5.10.zip
