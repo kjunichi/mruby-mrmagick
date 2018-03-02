@@ -10,7 +10,9 @@ environment:
     - visualcpp: C:\Program Files (x86)\Microsoft Visual Studio 14.0\VC\vcvarsall.bat
   machine: amd64
 install:
-  - choco install --ignore-checksums winflexbison3
+  - choco install wget
+  - wget https://sourceforge.net/projects/winflexbison/files/old_versions/win_flex_bison-2.5.10.zip
+  #- choco install --ignore-checksums winflexbison3
   - cinst imagemagick.app -PackageParameters "InstallDevelopmentHeaders=true LegacySupport=true"
   - refreshenv
   - dir "C:\Program Files\ImageMagick-7.0.7-Q16"
